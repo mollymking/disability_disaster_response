@@ -1,15 +1,8 @@
-capture log close disd01_import
-log using $stata/disd01_import.smcl, name(disd01_import) replace text
+log using $stata/disd01_import.log, replace
 
-//	project:	Disability and Disaster Information, Confidence, and Preparation
-
-//  task:		Import and Merge
-
-//  github:		disability_disaster
+//  github:		disability_disaster_response
 
 //  author:		Annie Yaeger 
-
-display "$S_DATE  $S_TIME"
 
 ***--------------------------***
 // PROGRAM SETUP
@@ -24,14 +17,16 @@ set more off
 // IMPORT SURVEY DATA
 ***--------------------------***
 
+import excel $data/survey_data_merged_cells.xlsx, sheet("2021 NHS General Data") firstrow
 
+save $data/2021_NHS_general_data.dta, replace
 
+clear
+import excel $data/survey_data_merged_cells.xlsx, sheet("2021 NHS Hazards Data") firstrow 
 
-
-
-
+save $data/2021_NHS_hazards_data.dta, replace
 
 ***--------------------------***
-log close disd01_import
+log close 
 
 exit
