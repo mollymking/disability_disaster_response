@@ -13,9 +13,9 @@ set more off
 // CHANGE DIRECTORIES to local files to run replication code:
 ***--------------------------***
 
-global stata "/Users/annieyaeger/Desktop/disability_disaster_response/stata"
-global data "/Users/annieyaeger/Desktop/disability_disaster_response/data"
-global results "/Users/annieyaeger/Desktop/disability_disaster_response/results"
+global stata "~/disability_disaster/stata"
+global data "~/disability_disaster/data"
+global results "~/disability_disaster/results"
 
 ***--------------------------***
 cd $stata

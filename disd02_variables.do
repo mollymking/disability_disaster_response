@@ -577,7 +577,7 @@ label define Preparedness_stage_label 0 "I am NOT prepared, and I do not intend 
 label values preparedness_stage Preparedness_stage_label
 tab preparedness_stage, m
 
-save $/disability_disaster/data/2021_NHS_general_data_cd34.dta, replace
+save $/disability_disaster/data/2021_NHS_general_data_disd02.dta, replace
 log close 
 exit
 
