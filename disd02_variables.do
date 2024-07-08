@@ -9,15 +9,6 @@ set linesize 80
 clear all
 set more off
 
-//Variables
-confidence_prep disability male  ///  
-	 mean_cbo new_disaster_experience i.insurance_ownership ///
-	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment, ///
-	  or
-	  
-//Variables let to do 
-	 c.income_redi 
-	 
 ***--------------------------***
 // DEMOGRAPHIC VARIABLES
 ***--------------------------***
@@ -89,6 +80,26 @@ label values age Age_label
 tab age, m
 
 //INSURANCE_OWNERSHIP
+//insurance recode
+gen insurance = .
+replace insurance = 0 if FP1Doyouhavehomeownersorr == "No"
+replace insurance = 1 if FP1Doyouhavehomeownersorr == "Yes"
+replace insurance = . if FP1Doyouhavehomeownersorr == "Prefer not to answer"
+replace insurance = . if FP1Doyouhavehomeownersorr == "Don't know"
+
+label define Insurance_label 0 No 1 Yes
+label values insurance Insurance_label
+
+//home ownership recode
+gen home_ownership = .
+replace home_ownership = 1 if D8Doyourentorownyourhome == "Own"
+replace home_ownership = 0 if D8Doyourentorownyourhome == "Rent"
+tab D8Doyourentorownyourhome home_ownership, m
+
+label define Home_ownership_label 1 Own 0 Rent
+label values home_ownership Home_ownership_label
+
+//insurance_ownership recode
 gen insurance_ownership = .
 replace insurance_ownership = 1 if insurance == 1 & home_ownership == 0
 replace insurance_ownership = 2 if insurance == 0 & home_ownership == 0
@@ -305,7 +316,7 @@ replace simple_employment = 0 if Employmentascapturedinrawsu == "No, I have been
 	| Employmentascapturedinrawsu == "No, I have been unemployed for more than 1 year" ///
 	| Employmentascapturedinrawsu == "Not in the labor force, and not retired (e.g. student, stay-at-home spouse)"
 replace simple_employment = 1 if Employmentascapturedinrawsu == "No, I am retired"
-replace simple_employment = 2 if Employmentascapturedinrawsu == Yes | Employmentascapturedinrawsu == "In Armed Forces"
+replace simple_employment = 2 if Employmentascapturedinrawsu == "Yes" | Employmentascapturedinrawsu == "In Armed Forces"
 tab simple_employment
 
 label define Simple_employment_label 0 "Unemployed" 1 "Retired" 2 "Employed"
@@ -577,7 +588,7 @@ label define Preparedness_stage_label 0 "I am NOT prepared, and I do not intend 
 label values preparedness_stage Preparedness_stage_label
 tab preparedness_stage, m
 
-save $/disability_disaster/data/2021_NHS_general_data_disd02.dta, replace
+save $data/2021_NHS_general_data_disd02.dta, replace
 log close 
 exit
 

@@ -21,11 +21,6 @@ import excel $data/survey_data_merged_cells.xlsx, sheet("2021 NHS General Data")
 
 save $data/2021_NHS_general_data.dta, replace
 
-clear
-import excel $data/survey_data_merged_cells.xlsx, sheet("2021 NHS Hazards Data") firstrow 
-
-save $data/2021_NHS_hazards_data.dta, replace
-
 ***--------------------------***
 log close 
 

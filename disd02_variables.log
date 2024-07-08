@@ -1,0 +1,2316 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/annieyaeger/Desktop/disability_disaster_response/stata/disd0
+> 2_variables.log
+  log type:  text
+ opened on:   8 Jul 2024, 11:54:38
+
+. 
+. ***--------------------------***
+. // PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 18 
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. ***--------------------------***
+. // DEMOGRAPHIC VARIABLES
+. ***--------------------------***
+. use $data/2021_NHS_general_data.dta
+
+. 
+. //DISABILITY
+. gen disability = .
+(7,197 missing values generated)
+
+. replace disability = 1 if D4ADoyouhaveadisabilityor == "Disability"
+(2,048 real changes made)
+
+. replace disability = 0 if D4ADoyouhaveadisabilityor == "No Disability"
+(5,149 real changes made)
+
+. tab D4ADoyouhaveadisabilityor disability, m
+
+  D4A  Do you |
+       have a |
+disability or |
+     a health |
+    condition |
+   that might |
+  affect your |      disability
+        capac |         0          1 |     Total
+--------------+----------------------+----------
+   Disability |         0      2,048 |     2,048 
+No Disability |     5,149          0 |     5,149 
+--------------+----------------------+----------
+        Total |     5,149      2,048 |     7,197 
+
+. 
+. label define Disability_label 1 Disability 0 "No Disability"
+
+. label values disability Disability_label
+
+. tab disability, m
+
+   disability |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+No Disability |      5,149       71.54       71.54
+   Disability |      2,048       28.46      100.00
+--------------+-----------------------------------
+        Total |      7,197      100.00
+
+. 
+. //EDUCATION
+. gen education = .
+(7,197 missing values generated)
+
+. replace education = 0 if Educationascapturedinrawsur == "Less than high school
+>  diploma"
+(197 real changes made)
+
+. replace education = 1 if Educationascapturedinrawsur == "High school degree or
+>  diploma"
+(1,359 real changes made)
+
+. replace education = 2 if Educationascapturedinrawsur == "Some college, no degr
+> ee"
+(1,526 real changes made)
+
+. replace education = 3 if Educationascapturedinrawsur == "Associate's degree"
+(815 real changes made)
+
+. replace education = 4 if Educationascapturedinrawsur == "Bachelor's degree"
+(1,651 real changes made)
+
+. replace education = 5 if Educationascapturedinrawsur == "Post graduate work/de
+> gree or professional degree"
+(1,548 real changes made)
+
+. replace education = . if Educationascapturedinrawsur == "Don't know"
+(0 real changes made)
+
+. replace education = . if Educationascapturedinrawsur == "Prefer not to answer"
+(0 real changes made)
+
+. tab Educationascapturedinrawsur education, m
+
+Education as captured |
+   in raw survey data |
+  prior to imputation |                  education
+       /EDUC_Original |         0          1          2          3 |     Total
+----------------------+--------------------------------------------+----------
+   Associate's degree |         0          0          0        815 |       815 
+    Bachelor's degree |         0          0          0          0 |     1,651 
+           Don't know |         0          0          0          0 |        26 
+High school degree .. |         0      1,359          0          0 |     1,359 
+Less than high scho.. |       197          0          0          0 |       197 
+Post graduate work/.. |         0          0          0          0 |     1,548 
+ Prefer not to answer |         0          0          0          0 |        75 
+Some college, no de.. |         0          0      1,526          0 |     1,526 
+----------------------+--------------------------------------------+----------
+                Total |       197      1,359      1,526        815 |     7,197 
+
+
+Education as captured |
+   in raw survey data |
+  prior to imputation |            education
+       /EDUC_Original |         4          5          . |     Total
+----------------------+---------------------------------+----------
+   Associate's degree |         0          0          0 |       815 
+    Bachelor's degree |     1,651          0          0 |     1,651 
+           Don't know |         0          0         26 |        26 
+High school degree .. |         0          0          0 |     1,359 
+Less than high scho.. |         0          0          0 |       197 
+Post graduate work/.. |         0      1,548          0 |     1,548 
+ Prefer not to answer |         0          0         75 |        75 
+Some college, no de.. |         0          0          0 |     1,526 
+----------------------+---------------------------------+----------
+                Total |     1,651      1,548        101 |     7,197 
+
+. 
+. label define Education_label 0 "Less than high school diploma" 1 "High school 
+> degree or diploma" 2 "Some college, no degree" 3 "Associate's degree" 4 "Bache
+> lor's degree" 5 "Post graduate work/degree or professional degree" 
+
+. label values education Education_label
+
+. tab education, m
+
+                              education |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+          Less than high school diploma |        197        2.74        2.74
+          High school degree or diploma |      1,359       18.88       21.62
+                Some college, no degree |      1,526       21.20       42.82
+                     Associate's degree |        815       11.32       54.15
+                      Bachelor's degree |      1,651       22.94       77.09
+Post graduate work/degree or profession |      1,548       21.51       98.60
+                                      . |        101        1.40      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      7,197      100.00
+
+. 
+. 
+. //MALE
+. gen male = .
+(7,197 missing values generated)
+
+. replace male = 0 if Genderascapturedinrawsurvey == "Female" | Genderascaptured
+> inrawsurvey == "Non-binary / third gender" | Genderascapturedinrawsurvey == "I
+>  use another term (specify): " 
+(3,877 real changes made)
+
+. replace male = 1 if Genderascapturedinrawsurvey == "Male"
+(3,206 real changes made)
+
+. replace male = . if Genderascapturedinrawsurvey == "Don't know" | Genderascapt
+> uredinrawsurvey == "Prefer not to answer"
+(0 real changes made)
+
+. tab male, m
+
+       male |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,877       53.87       53.87
+          1 |      3,206       44.55       98.42
+          . |        114        1.58      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Male_label 0 "Not male" 1 Male
+
+. label values male Male_label
+
+. tab male
+
+       male |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Not male |      3,877       54.74       54.74
+       Male |      3,206       45.26      100.00
+------------+-----------------------------------
+      Total |      7,083      100.00
+
+. 
+. //NEW_DISASTER_EXPERIENCE
+. gen new_disaster_experience = .
+(7,197 missing values generated)
+
+. replace new_disaster_experience = 0 if GENEXP1Haveyouoryourfamily == "No"
+(2,819 real changes made)
+
+. replace new_disaster_experience = 1 if GENEXP1Haveyouoryourfamily == "Yes"
+(4,100 real changes made)
+
+. replace new_disaster_experience = . if GENEXP1Haveyouoryourfamily == "Don't kn
+> ow"
+(0 real changes made)
+
+. replace new_disaster_experience = . if GENEXP1Haveyouoryourfamily == "Prefer n
+> ot to answer"
+(0 real changes made)
+
+. tab GENEXP1Haveyouoryourfamily new_disaster_experience, m
+
+GENEXP1  Have you or |
+    your family ever |
+     experienced the |
+        impacts of a |     new_disaster_experience
+       disaster? /GE |         0          1          . |     Total
+---------------------+---------------------------------+----------
+          Don't know |         0          0        266 |       266 
+                  No |     2,819          0          0 |     2,819 
+Prefer not to answer |         0          0         12 |        12 
+                 Yes |         0      4,100          0 |     4,100 
+---------------------+---------------------------------+----------
+               Total |     2,819      4,100        278 |     7,197 
+
+. 
+. label define new_disaster_experience_label 0 No 1 Yes 
+
+. label values new_disaster_experience new_disaster_experience_label
+
+. tab new_disaster_experience, m
+
+new_disaste |
+r_experienc |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         No |      2,819       39.17       39.17
+        Yes |      4,100       56.97       96.14
+          . |        278        3.86      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. //AGE
+. gen age = .
+(7,197 missing values generated)
+
+. replace age = 0 if QNS6WhatisyourageAGE == "18-29"
+(1,475 real changes made)
+
+. replace age = 1 if QNS6WhatisyourageAGE == "30-39"
+(1,444 real changes made)
+
+. replace age = 2 if QNS6WhatisyourageAGE == "40-49"
+(1,133 real changes made)
+
+. replace age = 3 if QNS6WhatisyourageAGE == "50-59"
+(1,158 real changes made)
+
+. replace age = 4 if QNS6WhatisyourageAGE == "60-69"
+(1,177 real changes made)
+
+. replace age = 5 if QNS6WhatisyourageAGE == "70-79"
+(684 real changes made)
+
+. replace age = 6 if QNS6WhatisyourageAGE == "Over 80"
+(126 real changes made)
+
+. tab QNS6WhatisyourageAGE age, m
+
+QNS6  What |
+   is your |                          age
+ age? /AGE |         0          1          2          3          4 |     Total
+-----------+-------------------------------------------------------+----------
+     18-29 |     1,475          0          0          0          0 |     1,475 
+     30-39 |         0      1,444          0          0          0 |     1,444 
+     40-49 |         0          0      1,133          0          0 |     1,133 
+     50-59 |         0          0          0      1,158          0 |     1,158 
+     60-69 |         0          0          0          0      1,177 |     1,177 
+     70-79 |         0          0          0          0          0 |       684 
+   Over 80 |         0          0          0          0          0 |       126 
+-----------+-------------------------------------------------------+----------
+     Total |     1,475      1,444      1,133      1,158      1,177 |     7,197 
+
+
+QNS6  What |
+   is your |          age
+ age? /AGE |         5          6 |     Total
+-----------+----------------------+----------
+     18-29 |         0          0 |     1,475 
+     30-39 |         0          0 |     1,444 
+     40-49 |         0          0 |     1,133 
+     50-59 |         0          0 |     1,158 
+     60-69 |         0          0 |     1,177 
+     70-79 |       684          0 |       684 
+   Over 80 |         0        126 |       126 
+-----------+----------------------+----------
+     Total |       684        126 |     7,197 
+
+. 
+. label define Age_label 0 "18-29" 1 "30-39" 2 "40-49" 3 "50-59" 4 "60-69" 5 "70
+> -79" 6 "Over 80"
+
+. label values age Age_label
+
+. tab age, m
+
+        age |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      18-29 |      1,475       20.49       20.49
+      30-39 |      1,444       20.06       40.56
+      40-49 |      1,133       15.74       56.30
+      50-59 |      1,158       16.09       72.39
+      60-69 |      1,177       16.35       88.75
+      70-79 |        684        9.50       98.25
+    Over 80 |        126        1.75      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. //INSURANCE_OWNERSHIP
+. //insurance recode
+. gen insurance = .
+(7,197 missing values generated)
+
+. replace insurance = 0 if FP1Doyouhavehomeownersorr == "No"
+(1,763 real changes made)
+
+. replace insurance = 1 if FP1Doyouhavehomeownersorr == "Yes"
+(5,079 real changes made)
+
+. replace insurance = . if FP1Doyouhavehomeownersorr == "Prefer not to answer"
+(0 real changes made)
+
+. replace insurance = . if FP1Doyouhavehomeownersorr == "Don't know"
+(0 real changes made)
+
+. 
+. label define Insurance_label 0 No 1 Yes
+
+. label values insurance Insurance_label
+
+. 
+. //home ownership recode
+. gen home_ownership = .
+(7,197 missing values generated)
+
+. replace home_ownership = 1 if D8Doyourentorownyourhome == "Own"
+(4,623 real changes made)
+
+. replace home_ownership = 0 if D8Doyourentorownyourhome == "Rent"
+(2,574 real changes made)
+
+. tab D8Doyourentorownyourhome home_ownership, m
+
+D8  Do you |
+   rent or |
+  own your |
+     home? |    home_ownership
+  /HOMEOWN |         0          1 |     Total
+-----------+----------------------+----------
+       Own |         0      4,623 |     4,623 
+      Rent |     2,574          0 |     2,574 
+-----------+----------------------+----------
+     Total |     2,574      4,623 |     7,197 
+
+. 
+. label define Home_ownership_label 1 Own 0 Rent
+
+. label values home_ownership Home_ownership_label
+
+. 
+. //insurance_ownership recode
+. gen insurance_ownership = .
+(7,197 missing values generated)
+
+. replace insurance_ownership = 1 if insurance == 1 & home_ownership == 0
+(1,193 real changes made)
+
+. replace insurance_ownership = 2 if insurance == 0 & home_ownership == 0
+(1,205 real changes made)
+
+. replace insurance_ownership = 3 if insurance == 1 & home_ownership == 1
+(3,886 real changes made)
+
+. replace insurance_ownership = 4 if insurance == 0 & home_ownership == 1
+(558 real changes made)
+
+. 
+. label define Insurance_own_label 1 "Renter with insurance" 2 "Renter without i
+> nsurance" 3 "Owner with insurance" 4 "Owner without insurance"
+
+. label values insurance_ownership Insurance_own_label
+
+. tab insurance_ownership, m
+
+     insurance_ownership |      Freq.     Percent        Cum.
+-------------------------+-----------------------------------
+   Renter with insurance |      1,193       16.58       16.58
+Renter without insurance |      1,205       16.74       33.32
+    Owner with insurance |      3,886       53.99       87.31
+ Owner without insurance |        558        7.75       95.07
+                       . |        355        4.93      100.00
+-------------------------+-----------------------------------
+                   Total |      7,197      100.00
+
+. 
+. //MEAN_CBO
+. //animal welfare
+. tab CBO1Howoftendoyouuseorre
+
+  CBO1  How often |
+    do you use or |
+   rely on any of |
+    the following |
+  community-based |
+            suppo |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        627        8.71        8.71
+A Moderate Amount |        506        7.03       15.74
+            Never |      4,387       60.96       76.70
+     Occasionally |        823       11.44       88.13
+           Rarely |        854       11.87      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen animal_welfare = .
+(7,197 missing values generated)
+
+. replace animal_welfare = 0 if CBO1Howoftendoyouuseorre == "Never"
+(4,387 real changes made)
+
+. replace animal_welfare = 1 if CBO1Howoftendoyouuseorre == "Rarely"
+(854 real changes made)
+
+. replace animal_welfare = 2 if CBO1Howoftendoyouuseorre == "Occasionally"
+(823 real changes made)
+
+. replace animal_welfare = 3 if CBO1Howoftendoyouuseorre == "A Moderate Amount"
+(506 real changes made)
+
+. replace animal_welfare = 4 if CBO1Howoftendoyouuseorre == "A Great Deal"
+(627 real changes made)
+
+. 
+. tab animal_welfare
+
+animal_welf |
+        are |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,387       60.96       60.96
+          1 |        854       11.87       72.82
+          2 |        823       11.44       84.26
+          3 |        506        7.03       91.29
+          4 |        627        8.71      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Animal_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderate Amount
+> " 4 "A Great Deal"
+
+. label values animal_welfare Animal_label
+
+. tab animal_welfare
+
+   animal_welfare |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      4,387       60.96       60.96
+           Rarely |        854       11.87       72.82
+     Occasionally |        823       11.44       84.26
+A Moderate Amount |        506        7.03       91.29
+     A Great Deal |        627        8.71      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //childcare
+. tab CBO1_b
+
+           CBO1_b |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        613        8.52        8.52
+A Moderate Amount |        707        9.82       18.34
+            Never |      4,602       63.94       82.28
+     Occasionally |        672        9.34       91.62
+           Rarely |        603        8.38      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen childcare = .
+(7,197 missing values generated)
+
+. replace childcare = 0 if CBO1_b == "Never"
+(4,602 real changes made)
+
+. replace childcare = 1 if CBO1_b == "Rarely"
+(603 real changes made)
+
+. replace childcare = 2 if CBO1_b == "Occasionally"
+(672 real changes made)
+
+. replace childcare = 3 if CBO1_b == "A Moderate Amount"
+(707 real changes made)
+
+. replace childcare = 4 if CBO1_b == "A Great Deal"
+(613 real changes made)
+
+. 
+. tab childcare
+
+  childcare |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,602       63.94       63.94
+          1 |        603        8.38       72.32
+          2 |        672        9.34       81.66
+          3 |        707        9.82       91.48
+          4 |        613        8.52      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Childcare_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderate Amo
+> unt" 4 "A Great Deal"
+
+. label values childcare Childcare_label
+
+. tab childcare
+
+        childcare |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      4,602       63.94       63.94
+           Rarely |        603        8.38       72.32
+     Occasionally |        672        9.34       81.66
+A Moderate Amount |        707        9.82       91.48
+     A Great Deal |        613        8.52      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //emergency_services
+. tab CBO1_d
+
+           CBO1_d |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        818       11.37       11.37
+A Moderate Amount |        901       12.52       23.88
+            Never |      2,399       33.33       57.22
+     Occasionally |      1,177       16.35       73.57
+           Rarely |      1,902       26.43      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen emergency_services = .
+(7,197 missing values generated)
+
+. replace emergency_services = 0 if CBO1_d == "Never"
+(2,399 real changes made)
+
+. replace emergency_services = 1 if CBO1_d == "Rarely"
+(1,902 real changes made)
+
+. replace emergency_services = 2 if CBO1_d == "Occasionally"
+(1,177 real changes made)
+
+. replace emergency_services = 3 if CBO1_d == "A Moderate Amount"
+(901 real changes made)
+
+. replace emergency_services = 4 if CBO1_d == "A Great Deal"
+(818 real changes made)
+
+. 
+. tab emergency_services
+
+emergency_s |
+    ervices |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,399       33.33       33.33
+          1 |      1,902       26.43       59.76
+          2 |      1,177       16.35       76.12
+          3 |        901       12.52       88.63
+          4 |        818       11.37      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Emergency_services_label 0 Never 1 Rarely 2 Occasionally 3 "A Mod
+> erate Amount" 4 "A Great Deal"
+
+. label values emergency_services Emergency_services_label
+
+. tab emergency_services
+
+emergency_service |
+                s |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      2,399       33.33       33.33
+           Rarely |      1,902       26.43       59.76
+     Occasionally |      1,177       16.35       76.12
+A Moderate Amount |        901       12.52       88.63
+     A Great Deal |        818       11.37      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //faith_services
+. tab CBO1_e
+
+           CBO1_e |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        884       12.28       12.28
+A Moderate Amount |        859       11.94       24.22
+            Never |      3,324       46.19       70.40
+     Occasionally |      1,152       16.01       86.41
+           Rarely |        978       13.59      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen faith_services = .
+(7,197 missing values generated)
+
+. replace faith_services = 0 if CBO1_e == "Never"
+(3,324 real changes made)
+
+. replace faith_services = 1 if CBO1_e == "Rarely"
+(978 real changes made)
+
+. replace faith_services = 2 if CBO1_e == "Occasionally"
+(1,152 real changes made)
+
+. replace faith_services = 3 if CBO1_e == "A Moderate Amount"
+(859 real changes made)
+
+. replace faith_services = 4 if CBO1_e == "A Great Deal"
+(884 real changes made)
+
+. 
+. tab faith_services
+
+faith_servi |
+        ces |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,324       46.19       46.19
+          1 |        978       13.59       59.77
+          2 |      1,152       16.01       75.78
+          3 |        859       11.94       87.72
+          4 |        884       12.28      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define faith_services_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderat
+> e Amount" 4 "A Great Deal"
+
+. label values faith_services faith_services_label
+
+. tab faith_services
+
+   faith_services |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,324       46.19       46.19
+           Rarely |        978       13.59       59.77
+     Occasionally |      1,152       16.01       75.78
+A Moderate Amount |        859       11.94       87.72
+     A Great Deal |        884       12.28      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //financial_support
+. tab CBO1_f
+
+           CBO1_f |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        749       10.41       10.41
+A Moderate Amount |        958       13.31       23.72
+            Never |      3,289       45.70       69.42
+     Occasionally |      1,060       14.73       84.15
+           Rarely |      1,141       15.85      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen financial_support = .
+(7,197 missing values generated)
+
+. replace financial_support = 0 if CBO1_f == "Never"
+(3,289 real changes made)
+
+. replace financial_support = 1 if CBO1_f == "Rarely"
+(1,141 real changes made)
+
+. replace financial_support = 2 if CBO1_f == "Occasionally"
+(1,060 real changes made)
+
+. replace financial_support = 3 if CBO1_f == "A Moderate Amount"
+(958 real changes made)
+
+. replace financial_support = 4 if CBO1_f == "A Great Deal"
+(749 real changes made)
+
+. 
+. tab financial_support
+
+financial_s |
+     upport |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,289       45.70       45.70
+          1 |      1,141       15.85       61.55
+          2 |      1,060       14.73       76.28
+          3 |        958       13.31       89.59
+          4 |        749       10.41      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define financial_support_label 0 Never 1 Rarely 2 Occasionally 3 "A Mode
+> rate Amount" 4 "A Great Deal"
+
+. label values financial_support financial_support_label
+
+. tab financial_support
+
+financial_support |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,289       45.70       45.70
+           Rarely |      1,141       15.85       61.55
+     Occasionally |      1,060       14.73       76.28
+A Moderate Amount |        958       13.31       89.59
+     A Great Deal |        749       10.41      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //food_pantry
+. tab CBO1_g
+
+           CBO1_g |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        837       11.63       11.63
+A Moderate Amount |        933       12.96       24.59
+            Never |      3,337       46.37       70.96
+     Occasionally |      1,165       16.19       87.15
+           Rarely |        925       12.85      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen food_pantry = .
+(7,197 missing values generated)
+
+. replace food_pantry = 0 if CBO1_g == "Never"
+(3,337 real changes made)
+
+. replace food_pantry = 1 if CBO1_g == "Rarely"
+(925 real changes made)
+
+. replace food_pantry = 2 if CBO1_g == "Occasionally"
+(1,165 real changes made)
+
+. replace food_pantry = 3 if CBO1_g == "A Moderate Amount"
+(933 real changes made)
+
+. replace food_pantry = 4 if CBO1_g == "A Great Deal"
+(837 real changes made)
+
+. 
+. tab food_pantry
+
+food_pantry |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,337       46.37       46.37
+          1 |        925       12.85       59.22
+          2 |      1,165       16.19       75.41
+          3 |        933       12.96       88.37
+          4 |        837       11.63      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define food_pantry_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderate A
+> mount" 4 "A Great Deal"
+
+. label values food_pantry food_pantry_label
+
+. tab food_pantry
+
+      food_pantry |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,337       46.37       46.37
+           Rarely |        925       12.85       59.22
+     Occasionally |      1,165       16.19       75.41
+A Moderate Amount |        933       12.96       88.37
+     A Great Deal |        837       11.63      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //general_services
+. tab CBO1_h
+
+           CBO1_h |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        633        8.80        8.80
+A Moderate Amount |        883       12.27       21.06
+            Never |      3,331       46.28       67.35
+     Occasionally |      1,152       16.01       83.35
+           Rarely |      1,198       16.65      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen general_services = .
+(7,197 missing values generated)
+
+. replace general_services = 0 if CBO1_h == "Never"
+(3,331 real changes made)
+
+. replace general_services = 1 if CBO1_h == "Rarely"
+(1,198 real changes made)
+
+. replace general_services = 2 if CBO1_h == "Occasionally"
+(1,152 real changes made)
+
+. replace general_services = 3 if CBO1_h == "A Moderate Amount"
+(883 real changes made)
+
+. replace general_services = 4 if CBO1_h == "A Great Deal"
+(633 real changes made)
+
+. 
+. tab general_services
+
+general_ser |
+      vices |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,331       46.28       46.28
+          1 |      1,198       16.65       62.93
+          2 |      1,152       16.01       78.94
+          3 |        883       12.27       91.20
+          4 |        633        8.80      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define general_services_label 0 Never 1 Rarely 2 Occasionally 3 "A Moder
+> ate Amount" 4 "A Great Deal"
+
+. label values general_services general_services_label
+
+. tab general_services
+
+ general_services |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,331       46.28       46.28
+           Rarely |      1,198       16.65       62.93
+     Occasionally |      1,152       16.01       78.94
+A Moderate Amount |        883       12.27       91.20
+     A Great Deal |        633        8.80      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //housing_support
+. tab CBO1_j
+
+           CBO1_j |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        770       10.70       10.70
+A Moderate Amount |        839       11.66       22.36
+            Never |      3,976       55.25       77.60
+     Occasionally |        842       11.70       89.30
+           Rarely |        770       10.70      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen housing_support = .
+(7,197 missing values generated)
+
+. replace housing_support = 0 if CBO1_j == "Never"
+(3,976 real changes made)
+
+. replace housing_support = 1 if CBO1_j == "Rarely"
+(770 real changes made)
+
+. replace housing_support = 2 if CBO1_j == "Occasionally"
+(842 real changes made)
+
+. replace housing_support = 3 if CBO1_j == "A Moderate Amount"
+(839 real changes made)
+
+. replace housing_support = 4 if CBO1_j == "A Great Deal"
+(770 real changes made)
+
+. 
+. tab housing_support
+
+housing_sup |
+       port |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,976       55.25       55.25
+          1 |        770       10.70       65.94
+          2 |        842       11.70       77.64
+          3 |        839       11.66       89.30
+          4 |        770       10.70      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define housing_support_label 0 Never 1 Rarely 2 Occasionally 3 "A Modera
+> te Amount" 4 "A Great Deal"
+
+. label values housing_support housing_support_label
+
+. tab housing_support
+
+  housing_support |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,976       55.25       55.25
+           Rarely |        770       10.70       65.94
+     Occasionally |        842       11.70       77.64
+A Moderate Amount |        839       11.66       89.30
+     A Great Deal |        770       10.70      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //immigrant_support
+. tab CBO1_k
+
+           CBO1_k |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        568        7.89        7.89
+A Moderate Amount |        601        8.35       16.24
+            Never |      4,796       66.64       82.88
+     Occasionally |        663        9.21       92.09
+           Rarely |        569        7.91      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen immigrant_support = .
+(7,197 missing values generated)
+
+. replace immigrant_support = 0 if CBO1_k == "Never"
+(4,796 real changes made)
+
+. replace immigrant_support = 1 if CBO1_k == "Rarely"
+(569 real changes made)
+
+. replace immigrant_support = 2 if CBO1_k == "Occasionally"
+(663 real changes made)
+
+. replace immigrant_support = 3 if CBO1_k == "A Moderate Amount"
+(601 real changes made)
+
+. replace immigrant_support = 4 if CBO1_k == "A Great Deal"
+(568 real changes made)
+
+. 
+. tab immigrant_support
+
+immigrant_s |
+     upport |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,796       66.64       66.64
+          1 |        569        7.91       74.54
+          2 |        663        9.21       83.76
+          3 |        601        8.35       92.11
+          4 |        568        7.89      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define immigrant_support_label 0 Never 1 Rarely 2 Occasionally 3 "A Mode
+> rate Amount" 4 "A Great Deal"
+
+. label values immigrant_support immigrant_support_label
+
+. tab immigrant_support
+
+immigrant_support |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      4,796       66.64       66.64
+           Rarely |        569        7.91       74.54
+     Occasionally |        663        9.21       83.76
+A Moderate Amount |        601        8.35       92.11
+     A Great Deal |        568        7.89      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //legal_aid
+. tab CBO1_l
+
+           CBO1_l |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        577        8.02        8.02
+A Moderate Amount |        748       10.39       18.41
+            Never |      4,395       61.07       79.48
+     Occasionally |        735       10.21       89.69
+           Rarely |        742       10.31      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen legal_aid = .
+(7,197 missing values generated)
+
+. replace legal_aid = 0 if CBO1_l == "Never"
+(4,395 real changes made)
+
+. replace legal_aid = 1 if CBO1_l == "Rarely"
+(742 real changes made)
+
+. replace legal_aid = 2 if CBO1_l == "Occasionally"
+(735 real changes made)
+
+. replace legal_aid = 3 if CBO1_l == "A Moderate Amount"
+(748 real changes made)
+
+. replace legal_aid = 4 if CBO1_l == "A Great Deal"
+(577 real changes made)
+
+. 
+. tab legal_aid
+
+  legal_aid |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,395       61.07       61.07
+          1 |        742       10.31       71.38
+          2 |        735       10.21       81.59
+          3 |        748       10.39       91.98
+          4 |        577        8.02      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define legal_aid_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderate Amo
+> unt" 4 "A Great Deal"
+
+. label values legal_aid legal_aid_label
+
+. tab legal_aid
+
+        legal_aid |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      4,395       61.07       61.07
+           Rarely |        742       10.31       71.38
+     Occasionally |        735       10.21       81.59
+A Moderate Amount |        748       10.39       91.98
+     A Great Deal |        577        8.02      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //small_business
+. tab CBO1_m
+
+           CBO1_m |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        752       10.45       10.45
+A Moderate Amount |        941       13.07       23.52
+            Never |      3,417       47.48       71.00
+     Occasionally |      1,184       16.45       87.45
+           Rarely |        903       12.55      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen small_business = .
+(7,197 missing values generated)
+
+. replace small_business = 0 if CBO1_m == "Never"
+(3,417 real changes made)
+
+. replace small_business = 1 if CBO1_m == "Rarely"
+(903 real changes made)
+
+. replace small_business = 2 if CBO1_m == "Occasionally"
+(1,184 real changes made)
+
+. replace small_business = 3 if CBO1_m == "A Moderate Amount"
+(941 real changes made)
+
+. replace small_business = 4 if CBO1_m == "A Great Deal"
+(752 real changes made)
+
+. 
+. tab small_business
+
+small_busin |
+        ess |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,417       47.48       47.48
+          1 |        903       12.55       60.03
+          2 |      1,184       16.45       76.48
+          3 |        941       13.07       89.55
+          4 |        752       10.45      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define small_business_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderat
+> e Amount" 4 "A Great Deal"
+
+. label values small_business small_business_label
+
+. tab small_business
+
+   small_business |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,417       47.48       47.48
+           Rarely |        903       12.55       60.03
+     Occasionally |      1,184       16.45       76.48
+A Moderate Amount |        941       13.07       89.55
+     A Great Deal |        752       10.45      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //senior_support
+. tab CBO1_n
+
+           CBO1_n |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+     A Great Deal |        703        9.77        9.77
+A Moderate Amount |        788       10.95       20.72
+            Never |      3,957       54.98       75.70
+     Occasionally |        923       12.82       88.52
+           Rarely |        826       11.48      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. gen senior_support = .
+(7,197 missing values generated)
+
+. replace senior_support = 0 if CBO1_n == "Never"
+(3,957 real changes made)
+
+. replace senior_support = 1 if CBO1_n == "Rarely"
+(826 real changes made)
+
+. replace senior_support = 2 if CBO1_n == "Occasionally"
+(923 real changes made)
+
+. replace senior_support = 3 if CBO1_n == "A Moderate Amount"
+(788 real changes made)
+
+. replace senior_support = 4 if CBO1_n == "A Great Deal"
+(703 real changes made)
+
+. 
+. tab senior_support
+
+senior_supp |
+        ort |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,957       54.98       54.98
+          1 |        826       11.48       66.46
+          2 |        923       12.82       79.28
+          3 |        788       10.95       90.23
+          4 |        703        9.77      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define senior_support_label 0 Never 1 Rarely 2 Occasionally 3 "A Moderat
+> e Amount" 4 "A Great Deal"
+
+. label values senior_support senior_support_label
+
+. tab senior_support
+
+   senior_support |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+            Never |      3,957       54.98       54.98
+           Rarely |        826       11.48       66.46
+     Occasionally |        923       12.82       79.28
+A Moderate Amount |        788       10.95       90.23
+     A Great Deal |        703        9.77      100.00
+------------------+-----------------------------------
+            Total |      7,197      100.00
+
+. 
+. //mean
+. gen mean_cbo = (animal_welfare + childcare + emergency_services + faith_servic
+> es + financial_support + food_pantry + general_services + housing_support + im
+> migrant_support + legal_aid + small_business + senior_support)/12
+
+. tab mean_cbo
+
+   mean_cbo |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,176       16.34       16.34
+   .0833333 |        399        5.54       21.88
+   .1666667 |        417        5.79       27.68
+        .25 |        342        4.75       32.43
+   .3333333 |        372        5.17       37.60
+   .4166667 |        293        4.07       41.67
+         .5 |        267        3.71       45.38
+   .5833333 |        197        2.74       48.12
+   .6666667 |        194        2.70       50.81
+        .75 |        170        2.36       53.17
+   .8333333 |        167        2.32       55.50
+   .9166667 |        177        2.46       57.95
+          1 |        213        2.96       60.91
+   1.083333 |        119        1.65       62.57
+   1.166667 |         95        1.32       63.89
+       1.25 |         86        1.19       65.08
+   1.333333 |         87        1.21       66.29
+   1.416667 |        107        1.49       67.78
+        1.5 |         92        1.28       69.06
+   1.583333 |         81        1.13       70.18
+   1.666667 |         93        1.29       71.47
+       1.75 |         78        1.08       72.56
+   1.833333 |         88        1.22       73.78
+   1.916667 |         80        1.11       74.89
+          2 |        157        2.18       77.07
+   2.083333 |        108        1.50       78.57
+   2.166667 |        102        1.42       79.99
+       2.25 |         95        1.32       81.31
+   2.333333 |         79        1.10       82.41
+   2.416667 |         82        1.14       83.55
+        2.5 |         75        1.04       84.59
+   2.583333 |         65        0.90       85.49
+   2.666667 |         72        1.00       86.49
+       2.75 |         61        0.85       87.34
+   2.833333 |         40        0.56       87.90
+   2.916667 |         59        0.82       88.72
+          3 |         88        1.22       89.94
+   3.083333 |         69        0.96       90.90
+   3.166667 |         51        0.71       91.61
+       3.25 |         62        0.86       92.47
+   3.333333 |         60        0.83       93.30
+   3.416667 |         80        1.11       94.41
+        3.5 |         45        0.63       95.04
+   3.583333 |         66        0.92       95.96
+   3.666667 |         55        0.76       96.72
+       3.75 |         41        0.57       97.29
+   3.833333 |         24        0.33       97.62
+   3.916667 |         16        0.22       97.85
+          4 |        155        2.15      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. //SIMPLE_EMPLOYMENT
+. gen simple_employment = .
+(7,197 missing values generated)
+
+. replace simple_employment = 0 if Employmentascapturedinrawsu == "No, I have be
+> en unemployed for less than 1 month" ///
+>         | Employmentascapturedinrawsu == "No, I have been unemployed for 1-2 m
+> onths" ///
+>         | Employmentascapturedinrawsu == "No, I have been unemployed for 2-6 m
+> onths" ///
+>         | Employmentascapturedinrawsu == "No, I have been unemployed for 6 mon
+> ths - 1 year" ///
+>         | Employmentascapturedinrawsu == "No, I have been unemployed for more 
+> than 1 year" ///
+>         | Employmentascapturedinrawsu == "Not in the labor force, and not reti
+> red (e.g. student, stay-at-home spouse)"
+(1,845 real changes made)
+
+. replace simple_employment = 1 if Employmentascapturedinrawsu == "No, I am reti
+> red"
+(1,564 real changes made)
+
+. replace simple_employment = 2 if Employmentascapturedinrawsu == "Yes" | Employ
+> mentascapturedinrawsu == "In Armed Forces"
+(3,523 real changes made)
+
+. tab simple_employment
+
+simple_empl |
+     oyment |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,845       26.62       26.62
+          1 |      1,564       22.56       49.18
+          2 |      3,523       50.82      100.00
+------------+-----------------------------------
+      Total |      6,932      100.00
+
+. 
+. label define Simple_employment_label 0 "Unemployed" 1 "Retired" 2 "Employed"
+
+. label values simple_employment Simple_employment_label
+
+. tab simple_employment, m
+
+simple_empl |
+     oyment |      Freq.     Percent        Cum.
+------------+-----------------------------------
+ Unemployed |      1,845       25.64       25.64
+    Retired |      1,564       21.73       47.37
+   Employed |      3,523       48.95       96.32
+          . |        265        3.68      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. //RACE/ETHNICITY
+. // Ethnicity
+. tab Ethnicityafterdatacleaningpr, m nolabel
+
+Ethnicity after data |
+   cleaning prior to |
+  imputation. (Value |
+ labels were changed |
+                  so |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+          Don't know |         57        0.79        0.79
+     Hispanic/Latino |      1,369       19.02       19.81
+        Non-Hispanic |      5,702       79.23       99.04
+Prefer not to answer |         69        0.96      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. tab Ethnicityafterdatacleaningpr, m
+
+Ethnicity after data |
+   cleaning prior to |
+  imputation. (Value |
+ labels were changed |
+                  so |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+          Don't know |         57        0.79        0.79
+     Hispanic/Latino |      1,369       19.02       19.81
+        Non-Hispanic |      5,702       79.23       99.04
+Prefer not to answer |         69        0.96      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. 
+. // Race
+. tab D4Whichofthefollowingdescr, m nolabel
+
+         D4  Which of the following |
+describes your race? You may select |
+                  one or more. /RAC |      Freq.     Percent        Cum.
+------------------------------------+-----------------------------------
+   American Indian or Alaska Native |        108        1.50        1.50
+                              Asian |        355        4.93        6.43
+          Black or African American |        833       11.57       18.01
+Native Hawaiian or Pacific Islander |         34        0.47       18.48
+                              Other |        292        4.06       22.54
+                  Two or More Races |        252        3.50       26.04
+                              White |      5,323       73.96      100.00
+------------------------------------+-----------------------------------
+                              Total |      7,197      100.00
+
+. tab D4Whichofthefollowingdescr, m 
+
+         D4  Which of the following |
+describes your race? You may select |
+                  one or more. /RAC |      Freq.     Percent        Cum.
+------------------------------------+-----------------------------------
+   American Indian or Alaska Native |        108        1.50        1.50
+                              Asian |        355        4.93        6.43
+          Black or African American |        833       11.57       18.01
+Native Hawaiian or Pacific Islander |         34        0.47       18.48
+                              Other |        292        4.06       22.54
+                  Two or More Races |        252        3.50       26.04
+                              White |      5,323       73.96      100.00
+------------------------------------+-----------------------------------
+                              Total |      7,197      100.00
+
+. 
+. ** Modified version of the combined race specification: insufficient sample si
+> ze of Native Hawaiian / Pacific Islander and  American Indian/Alaska Native, s
+> o added to "Other", otherwise follow:
+. *"combined race (a more detailed scheme that also separated out Pacific Island
+> -origin and multiple race respondents)"
+. * "pentagon race (which includes five categories distinguishing American India
+> n, Asian, Black, Hispanic, and White respondents)"
+. *Combined Race based on Howell & Emerson 2017: https://journals.sagepub.com/do
+> i/10.1177/2332649216648465
+. 
+. gen race_ethnicity = .
+(7,197 missing values generated)
+
+. replace race_ethnicity = 0 if D4Whichofthefollowingdescr == "White" &  ///
+>         D4Whichofthefollowingdescr != "Black or African American" & ///
+>         D4Whichofthefollowingdescr != "Asian" & ///
+>         Ethnicityafterdatacleaningpr != "Hispanic/Latino" & ///
+>         D4Whichofthefollowingdescr != "Native Hawaiian or Pacific Islander" & 
+> ///
+>         D4Whichofthefollowingdescr != "American Indian or Alaska Native" & ///
+>         D4Whichofthefollowingdescr != "Other"
+(4,519 real changes made)
+
+.         
+. replace race_ethnicity = 1 if D4Whichofthefollowingdescr == "Black or African 
+> American" & ///
+>         D4Whichofthefollowingdescr != "White" & ///
+>         D4Whichofthefollowingdescr != "Asian" & ///
+>         Ethnicityafterdatacleaningpr != "Hispanic/Latino" & ///
+>         D4Whichofthefollowingdescr != "Native Hawaiian or Pacific Islander" & 
+> ///
+>         D4Whichofthefollowingdescr != "American Indian or Alaska Native" & ///
+>         D4Whichofthefollowingdescr != "Other"
+(686 real changes made)
+
+.         
+. replace race_ethnicity = 2 if D4Whichofthefollowingdescr == "Asian" & ///
+>         D4Whichofthefollowingdescr != "Black or African American" & ///
+>         D4Whichofthefollowingdescr != "White" & ///
+>         Ethnicityafterdatacleaningpr != "Hispanic/Latino" & ///
+>         D4Whichofthefollowingdescr != "Native Hawaiian or Pacific Islander" & 
+> ///
+>         D4Whichofthefollowingdescr != "American Indian or Alaska Native" & ///
+>         D4Whichofthefollowingdescr != "Other"
+(338 real changes made)
+
+.         
+. *"Hispanic origin responses efectively override race responses (as in combined
+>  race and pentagon)" (Guluma and Saperstein 2022)
+. replace race_ethnicity = 3 if Ethnicityafterdatacleaningpr == "Hispanic/Latino
+> " 
+(1,369 real changes made)
+
+. 
+. replace race_ethnicity = 4 if ///
+>         D4Whichofthefollowingdescr == "Other" | ///
+>         D4Whichofthefollowingdescr == "Native Hawaiian or Pacific Islander" | 
+> ///
+>         D4Whichofthefollowingdescr == "American Indian or Alaska Native" & ///
+>         D4Whichofthefollowingdescr != "Black or African American" & ///
+>         D4Whichofthefollowingdescr != "Asian" & ///
+>         D4Whichofthefollowingdescr != "White" & ///
+>         D4Whichofthefollowingdescr != "Native Hawaiian or Pacific Islander" & 
+> ///
+>         D4Whichofthefollowingdescr != "American Indian or Alaska Native" & ///
+>         D4Whichofthefollowingdescr != "White" 
+(326 real changes made)
+
+. 
+. replace race_ethnicity = 5 if D4Whichofthefollowingdescr == "Two or More Races
+> " 
+(252 real changes made)
+
+. 
+. tab D4Whichofthefollowingdescr race_ethnicity, m
+
+     D4  Which of the |
+  following describes |
+   your race? You may |
+  select one or more. |               race_ethnicity
+                 /RAC |         0          1          2          3 |     Total
+----------------------+--------------------------------------------+----------
+American Indian or .. |         0          0          0         51 |       108 
+                Asian |         0          0        338         17 |       355 
+Black or African Am.. |         0        686          0        147 |       833 
+Native Hawaiian or .. |         0          0          0          0 |        34 
+                Other |         0          0          0          0 |       292 
+    Two or More Races |         0          0          0          0 |       252 
+                White |     4,519          0          0        804 |     5,323 
+----------------------+--------------------------------------------+----------
+                Total |     4,519        686        338      1,019 |     7,197 
+
+
+     D4  Which of the |
+  following describes |
+   your race? You may |
+  select one or more. |          race_ethnicity
+                 /RAC |         4          5          . |     Total
+----------------------+---------------------------------+----------
+American Indian or .. |         0          0         57 |       108 
+                Asian |         0          0          0 |       355 
+Black or African Am.. |         0          0          0 |       833 
+Native Hawaiian or .. |        34          0          0 |        34 
+                Other |       292          0          0 |       292 
+    Two or More Races |         0        252          0 |       252 
+                White |         0          0          0 |     5,323 
+----------------------+---------------------------------+----------
+                Total |       326        252         57 |     7,197 
+
+. 
+. label define race_ethnicity_label ///
+>         0 "White (non-Hispanic)" ///
+>         1 "Black or African American" ///
+>         2 "Asian" ///
+>         3 "Hispanic/Latino" ///
+>         4 "Other" ///
+>         5 "Multiple"
+
+. label values  race_ethnicity race_ethnicity_label
+
+. tab race_ethnicity, m
+
+           race_ethnicity |      Freq.     Percent        Cum.
+--------------------------+-----------------------------------
+     White (non-Hispanic) |      4,519       62.79       62.79
+Black or African American |        686        9.53       72.32
+                    Asian |        338        4.70       77.02
+          Hispanic/Latino |      1,019       14.16       91.18
+                    Other |        326        4.53       95.71
+                 Multiple |        252        3.50       99.21
+                        . |         57        0.79      100.00
+--------------------------+-----------------------------------
+                    Total |      7,197      100.00
+
+. tab race_ethnicity, m nolabel
+
+race_ethnic |
+        ity |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,519       62.79       62.79
+          1 |        686        9.53       72.32
+          2 |        338        4.70       77.02
+          3 |      1,019       14.16       91.18
+          4 |        326        4.53       95.71
+          5 |        252        3.50       99.21
+          . |         57        0.79      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. tab race race_ethnicity, m
+
+                      |               race_ethnicity
+       race_ethnicity | White (no  Black or       Asian  Hispanic/ |     Total
+----------------------+--------------------------------------------+----------
+ White (non-Hispanic) |     4,519          0          0          0 |     4,519 
+Black or African Amer |         0        686          0          0 |       686 
+                Asian |         0          0        338          0 |       338 
+      Hispanic/Latino |         0          0          0      1,019 |     1,019 
+                Other |         0          0          0          0 |       326 
+             Multiple |         0          0          0          0 |       252 
+                    . |         0          0          0          0 |        57 
+----------------------+--------------------------------------------+----------
+                Total |     4,519        686        338      1,019 |     7,197 
+
+
+                      |          race_ethnicity
+       race_ethnicity |     Other   Multiple          . |     Total
+----------------------+---------------------------------+----------
+ White (non-Hispanic) |         0          0          0 |     4,519 
+Black or African Amer |         0          0          0 |       686 
+                Asian |         0          0          0 |       338 
+      Hispanic/Latino |         0          0          0 |     1,019 
+                Other |       326          0          0 |       326 
+             Multiple |         0        252          0 |       252 
+                    . |         0          0         57 |        57 
+----------------------+---------------------------------+----------
+                Total |       326        252         57 |     7,197 
+
+. 
+. replace race_ethnicity = 4 if race_ethnicity == .
+(57 real changes made)
+
+. label values  race_ethnicity race_ethnicity_label
+
+. tab race race_ethnicity, m
+
+                      |               race_ethnicity
+       race_ethnicity | White (no  Black or       Asian  Hispanic/ |     Total
+----------------------+--------------------------------------------+----------
+ White (non-Hispanic) |     4,519          0          0          0 |     4,519 
+Black or African Amer |         0        686          0          0 |       686 
+                Asian |         0          0        338          0 |       338 
+      Hispanic/Latino |         0          0          0      1,019 |     1,019 
+                Other |         0          0          0          0 |       383 
+             Multiple |         0          0          0          0 |       252 
+----------------------+--------------------------------------------+----------
+                Total |     4,519        686        338      1,019 |     7,197 
+
+
+                      |    race_ethnicity
+       race_ethnicity |     Other   Multiple |     Total
+----------------------+----------------------+----------
+ White (non-Hispanic) |         0          0 |     4,519 
+Black or African Amer |         0          0 |       686 
+                Asian |         0          0 |       338 
+      Hispanic/Latino |         0          0 |     1,019 
+                Other |       383          0 |       383 
+             Multiple |         0        252 |       252 
+----------------------+----------------------+----------
+                Total |       383        252 |     7,197 
+
+. 
+. ***--------------------------***
+. // VARIABLES OF INTEREST
+. ***--------------------------***
+. //CONFIDENCE_PREP
+. gen confidence_prep = . 
+(7,197 missing values generated)
+
+. replace confidence_prep = 0 if C2Howconfidentareyouthaty == "Not at all confid
+> ent"
+(220 real changes made)
+
+. replace confidence_prep = 1 if C2Howconfidentareyouthaty == "Slightly confiden
+> t"
+(869 real changes made)
+
+. replace confidence_prep = 2 if C2Howconfidentareyouthaty == "Somewhat confiden
+> t"
+(1,904 real changes made)
+
+. replace confidence_prep = 3 if C2Howconfidentareyouthaty == "Moderately confid
+> ent"
+(2,243 real changes made)
+
+. replace confidence_prep = 4 if C2Howconfidentareyouthaty == "Extremely confide
+> nt"
+(1,775 real changes made)
+
+. replace confidence_prep = . if C2Howconfidentareyouthaty ==  "Don't know" | //
+> /
+>                                                            C2Howconfidentareyo
+> uthaty == "Prefer not to answer"
+(0 real changes made)
+
+. 
+. label define confidence_rev_label 4 "Extremely confident" 3 "Moderately confid
+> ent" 2 "Somewhat confident" 1 "Slighly confident" 0 "Not at all confident"
+
+. label values confidence_prep confidence_rev_label
+
+. tab confidence_prep, m
+
+     confidence_prep |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Not at all confident |        220        3.06        3.06
+   Slighly confident |        869       12.07       15.13
+  Somewhat confident |      1,904       26.46       41.59
+Moderately confident |      2,243       31.17       72.75
+ Extremely confident |      1,775       24.66       97.42
+                   . |        186        2.58      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. 
+. //MEAN_INFO
+. //alerts and warnings
+. gen info_alerts_warnings = .
+(7,197 missing values generated)
+
+. replace info_alerts_warnings = 0 
+(7,197 real changes made)
+
+. replace info_alerts_warnings = 1 if A3Inthepastyearwhatinfor == "Sign up for A
+> lerts and Warnings"
+(3,745 real changes made)
+
+. 
+. tab info_alerts_warnings
+
+info_alerts |
+  _warnings |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,452       47.96       47.96
+          1 |      3,745       52.04      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Info_alerts_warnings 0 No 1 "Sign up for Alerts and Warnings"
+
+. label values info_alerts_warnings Info_alerts_warnings
+
+. tab info_alerts_warnings
+
+           info_alerts_warnings |      Freq.     Percent        Cum.
+--------------------------------+-----------------------------------
+                             No |      3,452       47.96       47.96
+Sign up for Alerts and Warnings |      3,745       52.04      100.00
+--------------------------------+-----------------------------------
+                          Total |      7,197      100.00
+
+. 
+. //make a plan
+. tab A3_B
+
+       A3_B |      Freq.     Percent        Cum.
+------------+-----------------------------------
+Make a Plan |      4,015      100.00      100.00
+------------+-----------------------------------
+      Total |      4,015      100.00
+
+. 
+. gen info_plan = .
+(7,197 missing values generated)
+
+. replace info_plan = 0 
+(7,197 real changes made)
+
+. replace info_plan = 1 if A3_B == "Make a Plan"
+(4,015 real changes made)
+
+. 
+. tab info_plan
+
+  info_plan |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,182       44.21       44.21
+          1 |      4,015       55.79      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Info_plan 0 No 1 "Make a Plan"
+
+. label values info_plan Info_plan
+
+. tab info_plan
+
+  info_plan |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         No |      3,182       44.21       44.21
+Make a Plan |      4,015       55.79      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. //save for rainy day
+. tab A3_C
+
+                A3_C |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Save for a Rainy Day |      3,483      100.00      100.00
+---------------------+-----------------------------------
+               Total |      3,483      100.00
+
+. 
+. gen info_save = .
+(7,197 missing values generated)
+
+. replace info_save = 0 
+(7,197 real changes made)
+
+. replace info_save = 1 if A3_C == "Save for a Rainy Day"
+(3,483 real changes made)
+
+. 
+. tab info_save
+
+  info_save |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,714       51.60       51.60
+          1 |      3,483       48.40      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define Info_save 0 No 1 "Save for a Rainy Day"
+
+. label values info_save Info_save
+
+. tab info_save
+
+           info_save |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+                  No |      3,714       51.60       51.60
+Save for a Rainy Day |      3,483       48.40      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. 
+. //emergency Drills
+. tab A3_D
+
+                               A3_D |      Freq.     Percent        Cum.
+------------------------------------+-----------------------------------
+Practice Emergency Drills or Habits |      2,179      100.00      100.00
+------------------------------------+-----------------------------------
+                              Total |      2,179      100.00
+
+. 
+. gen info_emergency_drills = .
+(7,197 missing values generated)
+
+. replace info_emergency_drills = 0 
+(7,197 real changes made)
+
+. replace info_emergency_drills = 1 if A3_D == "Practice Emergency Drills or Hab
+> its"
+(2,179 real changes made)
+
+. 
+. tab info_emergency_drills
+
+info_emerge |
+ ncy_drills |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,018       69.72       69.72
+          1 |      2,179       30.28      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_emergency_drills 0 No 1 "Practice Emergency Drills or Habits
+> "
+
+. label values info_emergency_drills info_emergency_drills
+
+. tab info_emergency_drills
+
+              info_emergency_drills |      Freq.     Percent        Cum.
+------------------------------------+-----------------------------------
+                                 No |      5,018       69.72       69.72
+Practice Emergency Drills or Habits |      2,179       30.28      100.00
+------------------------------------+-----------------------------------
+                              Total |      7,197      100.00
+
+. 
+. //family Communication
+. tab A3_E
+
+                          A3_E |      Freq.     Percent        Cum.
+-------------------------------+-----------------------------------
+Test Family Communication Plan |      2,083      100.00      100.00
+-------------------------------+-----------------------------------
+                         Total |      2,083      100.00
+
+. 
+. gen info_communication = .
+(7,197 missing values generated)
+
+. replace info_communication = 0 
+(7,197 real changes made)
+
+. replace info_communication = 1 if A3_E == "Test Family Communication Plan"
+(2,083 real changes made)
+
+. 
+. tab info_communication
+
+info_commun |
+    ication |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,114       71.06       71.06
+          1 |      2,083       28.94      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_communication 0 No 1 "Test Family Communication Plan"
+
+. label values info_communication info_communication
+
+. tab info_communication
+
+            info_communication |      Freq.     Percent        Cum.
+-------------------------------+-----------------------------------
+                            No |      5,114       71.06       71.06
+Test Family Communication Plan |      2,083       28.94      100.00
+-------------------------------+-----------------------------------
+                         Total |      7,197      100.00
+
+. 
+. //safeguard Documents
+. tab A3_F
+
+               A3_F |      Freq.     Percent        Cum.
+--------------------+-----------------------------------
+Safeguard Documents |      2,983      100.00      100.00
+--------------------+-----------------------------------
+              Total |      2,983      100.00
+
+. 
+. gen info_documents = .
+(7,197 missing values generated)
+
+. replace info_documents = 0 
+(7,197 real changes made)
+
+. replace info_documents = 1 if A3_F == "Safeguard Documents"
+(2,983 real changes made)
+
+. 
+. tab info_documents
+
+info_docume |
+        nts |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,214       58.55       58.55
+          1 |      2,983       41.45      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_documents 0 No 1 "Safeguard Documents"
+
+. label values info_documents info_documents
+
+. tab info_documents
+
+     info_documents |      Freq.     Percent        Cum.
+--------------------+-----------------------------------
+                 No |      4,214       58.55       58.55
+Safeguard Documents |      2,983       41.45      100.00
+--------------------+-----------------------------------
+              Total |      7,197      100.00
+
+. 
+. //plan with neighbors
+. tab A3_G
+
+               A3_G |      Freq.     Percent        Cum.
+--------------------+-----------------------------------
+Plan with Neighbors |      1,418      100.00      100.00
+--------------------+-----------------------------------
+              Total |      1,418      100.00
+
+. 
+. gen info_neighbors = .
+(7,197 missing values generated)
+
+. replace info_neighbors = 0 
+(7,197 real changes made)
+
+. replace info_neighbors = 1 if A3_G == "Plan with Neighbors"
+(1,418 real changes made)
+
+. 
+. tab info_neighbors
+
+info_neighb |
+        ors |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,779       80.30       80.30
+          1 |      1,418       19.70      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_neighbors 0 No 1 "Plan with Neighbors"
+
+. label values info_neighbors info_neighbors
+
+. tab info_neighbors
+
+     info_neighbors |      Freq.     Percent        Cum.
+--------------------+-----------------------------------
+                 No |      5,779       80.30       80.30
+Plan with Neighbors |      1,418       19.70      100.00
+--------------------+-----------------------------------
+              Total |      7,197      100.00
+
+. 
+. //assemble/Update Supplies
+. tab A3_H
+
+                       A3_H |      Freq.     Percent        Cum.
+----------------------------+-----------------------------------
+Assemble or Update Supplies |      3,181      100.00      100.00
+----------------------------+-----------------------------------
+                      Total |      3,181      100.00
+
+. 
+. gen info_supplies = .
+(7,197 missing values generated)
+
+. replace info_supplies = 0 
+(7,197 real changes made)
+
+. replace info_supplies = 1 if A3_H == "Assemble or Update Supplies"
+(3,181 real changes made)
+
+. 
+. tab info_supplies
+
+info_suppli |
+         es |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,016       55.80       55.80
+          1 |      3,181       44.20      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_supplies 0 No 1 "Assemble or Update Supplies"
+
+. label values info_supplies info_supplies
+
+. tab info_supplies
+
+              info_supplies |      Freq.     Percent        Cum.
+----------------------------+-----------------------------------
+                         No |      4,016       55.80       55.80
+Assemble or Update Supplies |      3,181       44.20      100.00
+----------------------------+-----------------------------------
+                      Total |      7,197      100.00
+
+. 
+. //involved in Community
+. tab A3_I
+
+                          A3_I |      Freq.     Percent        Cum.
+-------------------------------+-----------------------------------
+Get Involved in Your Community |      1,332      100.00      100.00
+-------------------------------+-----------------------------------
+                         Total |      1,332      100.00
+
+. 
+. gen info_involved = .
+(7,197 missing values generated)
+
+. replace info_involved = 0 
+(7,197 real changes made)
+
+. replace info_involved = 1 if A3_I == "Get Involved in Your Community"
+(1,332 real changes made)
+
+. 
+. tab info_involved
+
+info_involv |
+         ed |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,865       81.49       81.49
+          1 |      1,332       18.51      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_involved 0 No 1 "Get Involved in Your Community"
+
+. label values info_involved info_involved
+
+. tab info_involved
+
+                 info_involved |      Freq.     Percent        Cum.
+-------------------------------+-----------------------------------
+                            No |      5,865       81.49       81.49
+Get Involved in Your Community |      1,332       18.51      100.00
+-------------------------------+-----------------------------------
+                         Total |      7,197      100.00
+
+. 
+. //make home safer
+. tab A3_J
+
+                A3_J |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Make Your Home Safer |      3,358      100.00      100.00
+---------------------+-----------------------------------
+               Total |      3,358      100.00
+
+. 
+. gen info_home_safer = .
+(7,197 missing values generated)
+
+. replace info_home_safer = 0 
+(7,197 real changes made)
+
+. replace info_home_safer = 1 if A3_J == "Make Your Home Safer"
+(3,358 real changes made)
+
+. 
+. tab info_home_safer
+
+info_home_s |
+       afer |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,839       53.34       53.34
+          1 |      3,358       46.66      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_home_safer 0 No 1 "Make Your Home Safer"
+
+. label values info_home_safer info_home_safer
+
+. tab info_home_safer
+
+     info_home_safer |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+                  No |      3,839       53.34       53.34
+Make Your Home Safer |      3,358       46.66      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. 
+. //know evacuation routes
+. tab A3_K
+
+                  A3_K |      Freq.     Percent        Cum.
+-----------------------+-----------------------------------
+Know Evacuation Routes |      3,134      100.00      100.00
+-----------------------+-----------------------------------
+                 Total |      3,134      100.00
+
+. 
+. gen info_evacuation = .
+(7,197 missing values generated)
+
+. replace info_evacuation = 0 
+(7,197 real changes made)
+
+. replace info_evacuation = 1 if A3_K == "Know Evacuation Routes"
+(3,134 real changes made)
+
+. 
+. tab info_evacuation
+
+info_evacua |
+       tion |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,063       56.45       56.45
+          1 |      3,134       43.55      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_evacuation 0 No 1 "Know Evacuation Routes"
+
+. label values info_evacuation info_evacuation
+
+. tab info_evacuation
+
+       info_evacuation |      Freq.     Percent        Cum.
+-----------------------+-----------------------------------
+                    No |      4,063       56.45       56.45
+Know Evacuation Routes |      3,134       43.55      100.00
+-----------------------+-----------------------------------
+                 Total |      7,197      100.00
+
+. 
+. //document and insure property
+. tab A3_L
+
+                        A3_L |      Freq.     Percent        Cum.
+-----------------------------+-----------------------------------
+Document and Insure Property |      2,465      100.00      100.00
+-----------------------------+-----------------------------------
+                       Total |      2,465      100.00
+
+. 
+. gen info_insure_property = .
+(7,197 missing values generated)
+
+. replace info_insure_property = 0 
+(7,197 real changes made)
+
+. replace info_insure_property = 1 if A3_L == "Document and Insure Property"
+(2,465 real changes made)
+
+. 
+. tab info_insure_property
+
+info_insure |
+  _property |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,732       65.75       65.75
+          1 |      2,465       34.25      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. 
+. label define info_insure_property 0 No 1 "Document and Insure Property"
+
+. label values info_insure_property info_insure_property
+
+. tab info_insure_property
+
+        info_insure_property |      Freq.     Percent        Cum.
+-----------------------------+-----------------------------------
+                          No |      4,732       65.75       65.75
+Document and Insure Property |      2,465       34.25      100.00
+-----------------------------+-----------------------------------
+                       Total |      7,197      100.00
+
+. 
+. //mean info
+. gen mean_info = (info_alerts_warnings + info_plan + info_save + info_emergency
+> _drills + info_communication + info_documents + info_neighbors + info_supplies
+>  + info_involved + info_home_safer + info_evacuation + info_insure_property)/1
+> 2
+
+. tab mean_info
+
+  mean_info |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        701        9.74        9.74
+   .0833333 |        661        9.18       18.92
+   .1666667 |        659        9.16       28.08
+        .25 |        913       12.69       40.77
+   .3333333 |        911       12.66       53.43
+   .4166667 |        787       10.94       64.36
+         .5 |        640        8.89       73.25
+   .5833333 |        526        7.31       80.56
+   .6666667 |        398        5.53       86.09
+        .75 |        310        4.31       90.40
+   .8333333 |        270        3.75       94.15
+   .9166667 |        169        2.35       96.50
+          1 |        252        3.50      100.00
+------------+-----------------------------------
+      Total |      7,197      100.00
+
+. label var mean_info "Mean info: alerts + plan + saving + drills + comm + docs 
+> + neighbors + supplies + involved + home + evac"
+note: label truncated to 80 characters
+
+. 
+. //PREPAREDNESS_STAGE
+. gen preparedness_stage = .
+(7,197 missing values generated)
+
+. replace preparedness_stage = 0 if ST_STG1Thinkingaboutpreparing == "I am NOT p
+> repared, and I do not intend to prepare in the next year"
+(812 real changes made)
+
+. replace preparedness_stage = 1 if ST_STG1Thinkingaboutpreparing == "I am NOT p
+> repared, but I intend to start preparing in the next year"
+(1,247 real changes made)
+
+. replace preparedness_stage = 2 if ST_STG1Thinkingaboutpreparing == "I am NOT p
+> repared, but I intend to get prepared in the next six months"
+(1,523 real changes made)
+
+. replace preparedness_stage = 3 if ST_STG1Thinkingaboutpreparing == "I have bee
+> n prepared for the last year"
+(1,652 real changes made)
+
+. replace preparedness_stage = 4 if ST_STG1Thinkingaboutpreparing == "I have bee
+> n prepared for MORE than a year and I continue preparing"
+(1,576 real changes made)
+
+. replace preparedness_stage = . if ST_STG1Thinkingaboutpreparing == "Don't know
+> "
+(0 real changes made)
+
+. replace preparedness_stage = . if ST_STG1Thinkingaboutpreparing == "Prefer not
+>  to answer"
+(0 real changes made)
+
+. tab ST_STG1Thinkingaboutpreparing preparedness_stage, m
+
+     ST_STG1 Thinking |
+      about preparing |
+       yourself for a |
+   disaster, which of |             preparedness_stage
+        the following |         0          1          2          3 |     Total
+----------------------+--------------------------------------------+----------
+           Don't know |         0          0          0          0 |       375 
+I am NOT prepared, .. |       812          0          0          0 |       812 
+I am NOT prepared, .. |         0          0      1,523          0 |     1,523 
+I am NOT prepared, .. |         0      1,247          0          0 |     1,247 
+I have been prepare.. |         0          0          0          0 |     1,576 
+I have been prepare.. |         0          0          0      1,652 |     1,652 
+ Prefer not to answer |         0          0          0          0 |        12 
+----------------------+--------------------------------------------+----------
+                Total |       812      1,247      1,523      1,652 |     7,197 
+
+
+     ST_STG1 Thinking |
+      about preparing |
+       yourself for a |
+   disaster, which of |  preparedness_stage
+        the following |         4          . |     Total
+----------------------+----------------------+----------
+           Don't know |         0        375 |       375 
+I am NOT prepared, .. |         0          0 |       812 
+I am NOT prepared, .. |         0          0 |     1,523 
+I am NOT prepared, .. |         0          0 |     1,247 
+I have been prepare.. |     1,576          0 |     1,576 
+I have been prepare.. |         0          0 |     1,652 
+ Prefer not to answer |         0         12 |        12 
+----------------------+----------------------+----------
+                Total |     1,576        387 |     7,197 
+
+. 
+. label define Preparedness_stage_label 0 "I am NOT prepared, and I do not inten
+> d to prepare in the next year" 1 "I am NOT prepared, but I intend to start pre
+> paring in the next year" 2 "I am NOT prepared, but I intend to get prepared in
+>  the next six months" 3 "I have been prepared for the last year" 4 "I have bee
+> n prepared for MORE than a year and I continue preparing"
+
+. label values preparedness_stage Preparedness_stage_label
+
+. tab preparedness_stage, m
+
+                     preparedness_stage |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I am NOT prepared, and I do not intend  |        812       11.28       11.28
+I am NOT prepared, but I intend to star |      1,247       17.33       28.61
+I am NOT prepared, but I intend to get  |      1,523       21.16       49.77
+ I have been prepared for the last year |      1,652       22.95       72.72
+I have been prepared for MORE than a ye |      1,576       21.90       94.62
+                                      . |        387        5.38      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      7,197      100.00
+
+. 
+. save $data/2021_NHS_general_data_disd02.dta, replace
+(file
+    /Users/annieyaeger/Desktop/disability_disaster_response/data/2021_NHS_gene
+    > ral_data_disd02.dta not found)
+file
+    ~/Desktop/disability_disaster_response/data/2021_NHS_general_data_disd02.d
+    > ta saved
+
+. log close 
+      name:  <unnamed>
+       log:  /Users/annieyaeger/Desktop/disability_disaster_response/stata/disd0
+> 2_variables.log
+  log type:  text
+ closed on:   8 Jul 2024, 11:54:38
+--------------------------------------------------------------------------------

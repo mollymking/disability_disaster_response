@@ -1,7 +1,6 @@
-log using $stata/disd03_descriptives.log, replace
-use $/disability_disaster/data/2021_NHS_general_data_disd02.dta
-
 //  github:		disability_disaster_response
+
+log using $stata/disd03_descriptives.log, replace
 
 //  author:		Annie Yaeger 
 
@@ -17,6 +16,8 @@ set more off
 ***--------------------------***
 // DESCRIPTIVE STATISTICS
 ***--------------------------***
+use $data/2021_NHS_general_data_disd02.dta
+
 //Confidence, preparedness stage, and info by disability status
 dtable i.confidence_prep i.preparedness_stage mean_info 	///
 	male /// 
@@ -36,7 +37,7 @@ twoway connected dispercent mean_info, ytitle(Percent Disability) sort
 clear all
 frame create disability_info_percents
 frame change disability_info_percents
-use $data/2021_NHS_general_data_cd43.dta
+use $data/2021_NHS_general_data_disd02.dta
 
 tab mean_info disability, matcell(x)
 gen r = 1
