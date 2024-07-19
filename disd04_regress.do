@@ -156,6 +156,38 @@ marginsplot, yline(0) ///
 graph export $results/disd04_prep_marginaleffects_plot.jpg, replace
 
 //Conditional marginal effects of disability on preparedness level, controlling for information and confidence
+***--------------------------***
+// OUTCOME: PREPAREDNESS ~ CONFIDENCE & INFO
+***--------------------------***	
+	
+*Base model: Disability only
+quietly: svy: ologit preparedness_stage disability, ///
+	  or
+estimates store prep_model_dis
+
+*Adding confidence
+quietly: svy: ologit preparedness_stage disability i.confidence_prep, ///
+	or
+estimates store prepconf_model
+
+*Adding info
+quietly: svy: ologit preparedness_stage disability i.confidence_prep c.mean_info, ///
+	or
+estimates store prepconf_model_info
+
+*Adding controls
+svy: ologit preparedness_stage disability i.confidence_prep c.mean_info male  ///  
+	 mean_cbo new_disaster_experience i.insurance_ownership  /// 
+	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment, ///
+	  or
+estimates store prepconf_model_controls
+
+* Put in table
+etable, showstars ///
+	estimates(prep_model_dis prepconf_model prepconf_model_info prepconf_model_controls) ///
+	mstat(N) mstat(r2_a) ///
+export("$results/disd04_prepconf_nested_model.docx", as(docx) replace)
+
 svy: ologit preparedness_stage i.disability mean_info confidence_prep male  ///  
 	 mean_cbo new_disaster_experience i.insurance_ownership  /// 
 	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
