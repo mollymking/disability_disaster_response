@@ -413,6 +413,41 @@ label define confidence_rev_label 4 "Extremely confident" 3 "Moderately confiden
 label values confidence_prep confidence_rev_label
 tab confidence_prep, m
 
+
+//Confidence recode for histograms
+tab confidence_prep
+
+gen extremely_conf = .
+replace extremely_conf = 1 if confidence_prep == 0
+label define Extremely_conf 1 "Extremely confident"
+label values extremely_conf Extremely_conf
+tab extremely_conf
+
+gen moderate_conf = .
+replace moderate_conf = 1 if confidence_prep == 1
+label define Moderate_conf 1 "Moderately confident"
+label values moderate_conf Moderate_conf
+tab moderate_conf
+
+gen somewhat_conf = .
+replace somewhat_conf = 1 if confidence_prep == 2
+label define Somewhat_conf 1 "Somewhat confident"
+label values somewhat_conf Somewhat_conf
+tab somewhat_conf
+
+gen slightly_conf = .
+replace slightly_conf = 1 if confidence_prep == 3
+label define Slightly_conf 1 "Slightly confident"
+label values slightly_conf Slightly_conf
+tab slightly_conf
+
+gen not_conf = .
+replace not_conf = 1 if confidence_prep == 4
+label define Not_conf 1 "Not at all confident"
+label values not_conf Not_conf
+tab not_conf
+
+
 //MEAN_INFO
 //alerts and warnings
 gen info_alerts_warnings = .
@@ -573,6 +608,7 @@ gen mean_info = (info_alerts_warnings + info_plan + info_save + info_emergency_d
 tab mean_info
 label var mean_info "Mean info: alerts + plan + saving + drills + comm + docs + neighbors + supplies + involved + home + evac"
 
+
 //PREPAREDNESS_STAGE
 gen preparedness_stage = .
 replace preparedness_stage = 0 if ST_STG1Thinkingaboutpreparing == "I am NOT prepared, and I do not intend to prepare in the next year"
@@ -588,10 +624,42 @@ label define Preparedness_stage_label 0 "I am NOT prepared, and I do not intend 
 label values preparedness_stage Preparedness_stage_label
 tab preparedness_stage, m
 
+//Preparedness stage recode for histograms
+tab preparedness_stage
+tab preparedness_stage, nolab
+
+gen not_prepared = .
+replace not_prepared = 1 if preparedness_stage == 0
+label define Not_prepared_label 1 "I am NOT prepared, and I do not intend to prepare in the next year"
+label values not_prepared Not_prepared_label
+tab not_prepared
+
+gen intend_prep_year = .
+replace intend_prep_year = 1 if preparedness_stage == 1
+label define Intend_prep_year 1 "I am NOT prepared, but I intend to start preparing in the next year"
+label values intend_prep_year Intend_prep_year
+tab intend_prep_year
+
+gen intend_prep_6months = .
+replace intend_prep_6months = 1 if preparedness_stage == 2
+label define Intend_prep_6months 1 "I am NOT prepared, but I intend to get prepared in the next six months"
+label values intend_prep_6months Intend_prep_6months
+tab intend_prep_6months
+
+gen prepared_year = .
+replace prepared_year = 1 if preparedness_stage == 3
+label define Prepared_year 1 "I have been prepared for the last year"
+label values prepared_year Prepared_year
+tab prepared_year
+
+gen prepared_overyear= .
+replace prepared_overyear = 1 if preparedness_stage == 4
+label define Prepared_overyear 1 "I have been prepared for MORE than a year and I continue preparing"
+label values prepared_overyear Prepared_overyear
+tab prepared_overyear
+
 save $data/2021_NHS_general_data_disd02.dta, replace
+
+***--------------------------***
 log close 
-exit
-
-log close
-
 exit

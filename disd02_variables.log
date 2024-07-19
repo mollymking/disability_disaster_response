@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /Users/annieyaeger/Desktop/disability_disaster_response/stata/disd0
-> 2_variables.log
+       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
+> isaster_response/stata/disd02_variables.log
   log type:  text
- opened on:   8 Jul 2024, 11:54:38
+ opened on:  18 Jul 2024, 17:35:27
 
 . 
 . ***--------------------------***
@@ -1645,6 +1645,117 @@ Moderately confident |      2,243       31.17       72.75
                Total |      7,197      100.00
 
 . 
+. 
+. //Confidence recode for histograms
+. tab confidence_prep
+
+     confidence_prep |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Not at all confident |        220        3.14        3.14
+   Slighly confident |        869       12.39       15.53
+  Somewhat confident |      1,904       27.16       42.69
+Moderately confident |      2,243       31.99       74.68
+ Extremely confident |      1,775       25.32      100.00
+---------------------+-----------------------------------
+               Total |      7,011      100.00
+
+. 
+. gen extremely_conf = .
+(7,197 missing values generated)
+
+. replace extremely_conf = 1 if confidence_prep == 0
+(220 real changes made)
+
+. label define Extremely_conf 1 "Extremely confident"
+
+. label values extremely_conf Extremely_conf
+
+. tab extremely_conf
+
+     extremely_conf |      Freq.     Percent        Cum.
+--------------------+-----------------------------------
+Extremely confident |        220      100.00      100.00
+--------------------+-----------------------------------
+              Total |        220      100.00
+
+. 
+. gen moderate_conf = .
+(7,197 missing values generated)
+
+. replace moderate_conf = 1 if confidence_prep == 1
+(869 real changes made)
+
+. label define Moderate_conf 1 "Moderately confident"
+
+. label values moderate_conf Moderate_conf
+
+. tab moderate_conf
+
+       moderate_conf |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Moderately confident |        869      100.00      100.00
+---------------------+-----------------------------------
+               Total |        869      100.00
+
+. 
+. gen somewhat_conf = .
+(7,197 missing values generated)
+
+. replace somewhat_conf = 1 if confidence_prep == 2
+(1,904 real changes made)
+
+. label define Somewhat_conf 1 "Somewhat confident"
+
+. label values somewhat_conf Somewhat_conf
+
+. tab somewhat_conf
+
+     somewhat_conf |      Freq.     Percent        Cum.
+-------------------+-----------------------------------
+Somewhat confident |      1,904      100.00      100.00
+-------------------+-----------------------------------
+             Total |      1,904      100.00
+
+. 
+. gen slightly_conf = .
+(7,197 missing values generated)
+
+. replace slightly_conf = 1 if confidence_prep == 3
+(2,243 real changes made)
+
+. label define Slightly_conf 1 "Slightly confident"
+
+. label values slightly_conf Slightly_conf
+
+. tab slightly_conf
+
+     slightly_conf |      Freq.     Percent        Cum.
+-------------------+-----------------------------------
+Slightly confident |      2,243      100.00      100.00
+-------------------+-----------------------------------
+             Total |      2,243      100.00
+
+. 
+. gen not_conf = .
+(7,197 missing values generated)
+
+. replace not_conf = 1 if confidence_prep == 4
+(1,775 real changes made)
+
+. label define Not_conf 1 "Not at all confident"
+
+. label values not_conf Not_conf
+
+. tab not_conf
+
+            not_conf |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+Not at all confident |      1,775      100.00      100.00
+---------------------+-----------------------------------
+               Total |      1,775      100.00
+
+. 
+. 
 . //MEAN_INFO
 . //alerts and warnings
 . gen info_alerts_warnings = .
@@ -2209,6 +2320,7 @@ Document and Insure Property |      2,465       34.25      100.00
 note: label truncated to 80 characters
 
 . 
+. 
 . //PREPAREDNESS_STAGE
 . gen preparedness_stage = .
 (7,197 missing values generated)
@@ -2299,18 +2411,143 @@ I have been prepared for MORE than a ye |      1,576       21.90       94.62
                                   Total |      7,197      100.00
 
 . 
-. save $data/2021_NHS_general_data_disd02.dta, replace
-(file
-    /Users/annieyaeger/Desktop/disability_disaster_response/data/2021_NHS_gene
-    > ral_data_disd02.dta not found)
-file
-    ~/Desktop/disability_disaster_response/data/2021_NHS_general_data_disd02.d
-    > ta saved
+. //Preparedness stage recode for histograms
+. tab preparedness_stage
 
+                     preparedness_stage |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I am NOT prepared, and I do not intend  |        812       11.92       11.92
+I am NOT prepared, but I intend to star |      1,247       18.31       30.23
+I am NOT prepared, but I intend to get  |      1,523       22.36       52.60
+ I have been prepared for the last year |      1,652       24.26       76.86
+I have been prepared for MORE than a ye |      1,576       23.14      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      6,810      100.00
+
+. tab preparedness_stage, nolab
+
+preparednes |
+    s_stage |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        812       11.92       11.92
+          1 |      1,247       18.31       30.23
+          2 |      1,523       22.36       52.60
+          3 |      1,652       24.26       76.86
+          4 |      1,576       23.14      100.00
+------------+-----------------------------------
+      Total |      6,810      100.00
+
+. 
+. gen not_prepared = .
+(7,197 missing values generated)
+
+. replace not_prepared = 1 if preparedness_stage == 0
+(812 real changes made)
+
+. label define Not_prepared_label 1 "I am NOT prepared, and I do not intend to p
+> repare in the next year"
+
+. label values not_prepared Not_prepared_label
+
+. tab not_prepared
+
+                           not_prepared |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I am NOT prepared, and I do not intend  |        812      100.00      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        812      100.00
+
+. 
+. gen intend_prep_year = .
+(7,197 missing values generated)
+
+. replace intend_prep_year = 1 if preparedness_stage == 1
+(1,247 real changes made)
+
+. label define Intend_prep_year 1 "I am NOT prepared, but I intend to start prep
+> aring in the next year"
+
+. label values intend_prep_year Intend_prep_year
+
+. tab intend_prep_year
+
+                       intend_prep_year |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I am NOT prepared, but I intend to star |      1,247      100.00      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      1,247      100.00
+
+. 
+. gen intend_prep_6months = .
+(7,197 missing values generated)
+
+. replace intend_prep_6months = 1 if preparedness_stage == 2
+(1,523 real changes made)
+
+. label define Intend_prep_6months 1 "I am NOT prepared, but I intend to get pre
+> pared in the next six months"
+
+. label values intend_prep_6months Intend_prep_6months
+
+. tab intend_prep_6months
+
+                    intend_prep_6months |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I am NOT prepared, but I intend to get  |      1,523      100.00      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      1,523      100.00
+
+. 
+. gen prepared_year = .
+(7,197 missing values generated)
+
+. replace prepared_year = 1 if preparedness_stage == 3
+(1,652 real changes made)
+
+. label define Prepared_year 1 "I have been prepared for the last year"
+
+. label values prepared_year Prepared_year
+
+. tab prepared_year
+
+                         prepared_year |      Freq.     Percent        Cum.
+---------------------------------------+-----------------------------------
+I have been prepared for the last year |      1,652      100.00      100.00
+---------------------------------------+-----------------------------------
+                                 Total |      1,652      100.00
+
+. 
+. gen prepared_overyear= .
+(7,197 missing values generated)
+
+. replace prepared_overyear = 1 if preparedness_stage == 4
+(1,576 real changes made)
+
+. label define Prepared_overyear 1 "I have been prepared for MORE than a year an
+> d I continue preparing"
+
+. label values prepared_overyear Prepared_overyear
+
+. tab prepared_overyear
+
+                      prepared_overyear |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+I have been prepared for MORE than a ye |      1,576      100.00      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      1,576      100.00
+
+. 
+. save $data/2021_NHS_general_data_disd02.dta, replace
+file
+    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
+    > _response/data/2021_NHS_general_data_disd02.dta saved
+
+. 
+. ***--------------------------***
 . log close 
       name:  <unnamed>
-       log:  /Users/annieyaeger/Desktop/disability_disaster_response/stata/disd0
-> 2_variables.log
+       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
+> isaster_response/stata/disd02_variables.log
   log type:  text
- closed on:   8 Jul 2024, 11:54:38
+ closed on:  18 Jul 2024, 17:35:28
 --------------------------------------------------------------------------------
