@@ -44,5 +44,6 @@ cd $stata
 
 do disd01_import.do 		// import and add survey weights
 do disd02_variables.do 		// recode variables
+do disd02b_redi_income.do	// convert categorical to continuous income
 do disd03_descriptives.do	// descriptive statistics
 do disd04_regress.do		// regressions
