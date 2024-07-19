@@ -1,0 +1,523 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
+> isaster_response/stata/disd02b_redi_income.log
+  log type:  text
+ opened on:  18 Jul 2024, 17:59:09
+
+. 
+. //  github:             disability_disaster_response
+. 
+. //  author:             Molly King
+. 
+. ***--------------------------***
+. // PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 18 
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. ***--------------------------***
+. // NOTES
+. ***--------------------------***
+. /*
+> This .do file uses the REDI user-written program to convert categorical to con
+> tinuous income
+> for use in the final regression analyses.
+> For more on this program, please see the Stata help file for "redi" or the pub
+> lication:
+> 
+> King, Molly M. 2022. "REDI for binned data: 
+> A Random Empirical Distribution Imputation method for estimating continuous in
+> comes." 
+> Sociological Methodology  52(2): 220-253. https://doi.org/10.1177/008117502211
+> 08086
+> */
+. ***--------------------------***
+. // CREATE CATEGORICAL INCOME VARIABLE
+. ***--------------------------***
+. 
+. use $data/2021_NHS_general_data_disd02.dta, clear
+
+. 
+. gen income = .
+(7,197 missing values generated)
+
+. replace income = 0 if Incomeascapturedinrawsurvey == "Less than $10,000"
+(492 real changes made)
+
+. replace income = 1 if Incomeascapturedinrawsurvey == "$10,000 to $19,999"
+(591 real changes made)
+
+. replace income = 2 if Incomeascapturedinrawsurvey == "$20,000 to $29,999"
+(707 real changes made)
+
+. replace income = 3 if Incomeascapturedinrawsurvey == "$30,000 to $39,999"
+(604 real changes made)
+
+. replace income = 4 if Incomeascapturedinrawsurvey == "$40,000 to $49,999"
+(578 real changes made)
+
+. replace income = 5 if Incomeascapturedinrawsurvey == "$50,000 to $59,999"
+(604 real changes made)
+
+. replace income = 6 if Incomeascapturedinrawsurvey == "$60,000 to $69,999"
+(404 real changes made)
+
+. replace income = 7 if Incomeascapturedinrawsurvey == "$70,000 to $79,999"
+(511 real changes made)
+
+. replace income = 8 if Incomeascapturedinrawsurvey == "$80,000 to $89,999"
+(243 real changes made)
+
+. replace income = 9 if Incomeascapturedinrawsurvey == "$90,000 to $99,999"
+(313 real changes made)
+
+. replace income = 10 if Incomeascapturedinrawsurvey == "$100,000 to $149,999"
+(1,012 real changes made)
+
+. replace income = 11 if Incomeascapturedinrawsurvey == "$150,000 to $250,000"
+(547 real changes made)
+
+. replace income = 12 if Incomeascapturedinrawsurvey == "More than $250,000"
+(179 real changes made)
+
+. replace income = . if Incomeascapturedinrawsurvey == "Don't know"
+(0 real changes made)
+
+. replace income = . if Incomeascapturedinrawsurvey == "Prefer not to answer"
+(0 real changes made)
+
+. tab Incomeascapturedinrawsurvey income, m
+
+  Income as captured |
+ in raw survey data, |
+ prior to imputation |
+      and collapsing |                   income
+              answer |         0          1          2          3 |     Total
+---------------------+--------------------------------------------+----------
+  $10,000 to $19,999 |         0        591          0          0 |       591 
+$100,000 to $149,999 |         0          0          0          0 |     1,012 
+$150,000 to $250,000 |         0          0          0          0 |       547 
+  $20,000 to $29,999 |         0          0        707          0 |       707 
+  $30,000 to $39,999 |         0          0          0        604 |       604 
+  $40,000 to $49,999 |         0          0          0          0 |       578 
+  $50,000 to $59,999 |         0          0          0          0 |       604 
+  $60,000 to $69,999 |         0          0          0          0 |       404 
+  $70,000 to $79,999 |         0          0          0          0 |       511 
+  $80,000 to $89,999 |         0          0          0          0 |       243 
+  $90,000 to $99,999 |         0          0          0          0 |       313 
+          Don't know |         0          0          0          0 |        90 
+   Less than $10,000 |       492          0          0          0 |       492 
+  More than $250,000 |         0          0          0          0 |       179 
+Prefer not to answer |         0          0          0          0 |       322 
+---------------------+--------------------------------------------+----------
+               Total |       492        591        707        604 |     7,197 
+
+
+  Income as captured |
+ in raw survey data, |
+ prior to imputation |
+      and collapsing |                   income
+              answer |         4          5          6          7 |     Total
+---------------------+--------------------------------------------+----------
+  $10,000 to $19,999 |         0          0          0          0 |       591 
+$100,000 to $149,999 |         0          0          0          0 |     1,012 
+$150,000 to $250,000 |         0          0          0          0 |       547 
+  $20,000 to $29,999 |         0          0          0          0 |       707 
+  $30,000 to $39,999 |         0          0          0          0 |       604 
+  $40,000 to $49,999 |       578          0          0          0 |       578 
+  $50,000 to $59,999 |         0        604          0          0 |       604 
+  $60,000 to $69,999 |         0          0        404          0 |       404 
+  $70,000 to $79,999 |         0          0          0        511 |       511 
+  $80,000 to $89,999 |         0          0          0          0 |       243 
+  $90,000 to $99,999 |         0          0          0          0 |       313 
+          Don't know |         0          0          0          0 |        90 
+   Less than $10,000 |         0          0          0          0 |       492 
+  More than $250,000 |         0          0          0          0 |       179 
+Prefer not to answer |         0          0          0          0 |       322 
+---------------------+--------------------------------------------+----------
+               Total |       578        604        404        511 |     7,197 
+
+
+  Income as captured |
+ in raw survey data, |
+ prior to imputation |
+      and collapsing |                   income
+              answer |         8          9         10         11 |     Total
+---------------------+--------------------------------------------+----------
+  $10,000 to $19,999 |         0          0          0          0 |       591 
+$100,000 to $149,999 |         0          0      1,012          0 |     1,012 
+$150,000 to $250,000 |         0          0          0        547 |       547 
+  $20,000 to $29,999 |         0          0          0          0 |       707 
+  $30,000 to $39,999 |         0          0          0          0 |       604 
+  $40,000 to $49,999 |         0          0          0          0 |       578 
+  $50,000 to $59,999 |         0          0          0          0 |       604 
+  $60,000 to $69,999 |         0          0          0          0 |       404 
+  $70,000 to $79,999 |         0          0          0          0 |       511 
+  $80,000 to $89,999 |       243          0          0          0 |       243 
+  $90,000 to $99,999 |         0        313          0          0 |       313 
+          Don't know |         0          0          0          0 |        90 
+   Less than $10,000 |         0          0          0          0 |       492 
+  More than $250,000 |         0          0          0          0 |       179 
+Prefer not to answer |         0          0          0          0 |       322 
+---------------------+--------------------------------------------+----------
+               Total |       243        313      1,012        547 |     7,197 
+
+
+  Income as captured |
+ in raw survey data, |
+ prior to imputation |
+      and collapsing |        income
+              answer |        12          . |     Total
+---------------------+----------------------+----------
+  $10,000 to $19,999 |         0          0 |       591 
+$100,000 to $149,999 |         0          0 |     1,012 
+$150,000 to $250,000 |         0          0 |       547 
+  $20,000 to $29,999 |         0          0 |       707 
+  $30,000 to $39,999 |         0          0 |       604 
+  $40,000 to $49,999 |         0          0 |       578 
+  $50,000 to $59,999 |         0          0 |       604 
+  $60,000 to $69,999 |         0          0 |       404 
+  $70,000 to $79,999 |         0          0 |       511 
+  $80,000 to $89,999 |         0          0 |       243 
+  $90,000 to $99,999 |         0          0 |       313 
+          Don't know |         0         90 |        90 
+   Less than $10,000 |         0          0 |       492 
+  More than $250,000 |       179          0 |       179 
+Prefer not to answer |         0        322 |       322 
+---------------------+----------------------+----------
+               Total |       179        412 |     7,197 
+
+. 
+. label define Income_label ///
+>         0 "Less than $10,000" ///
+>         1 "$10,000 to $19,999" ///
+>         2 "$20,000 to $29,999" ///
+>         3 "$30,000 to $39,999" ///
+>         4 "$40,000 to $49,999" ///
+>         5 "$50,000 to $59,999" ///
+>         6 "$60,000 to $69,999" ///
+>         7 "$70,000 to $79,999" ///
+>         8 "$80,000 to $89,999" ///
+>         9 "$90,000 to $99,999" ///
+>         10 "$100,000 to $149,999" ///
+>         11 "$150,000 to $250,000" ///
+>         12 "$250,000 or more" 
+
+. label values income Income_label
+
+. tab income, m
+
+              income |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+   Less than $10,000 |        492        6.84        6.84
+  $10,000 to $19,999 |        591        8.21       15.05
+  $20,000 to $29,999 |        707        9.82       24.87
+  $30,000 to $39,999 |        604        8.39       33.26
+  $40,000 to $49,999 |        578        8.03       41.29
+  $50,000 to $59,999 |        604        8.39       49.69
+  $60,000 to $69,999 |        404        5.61       55.30
+  $70,000 to $79,999 |        511        7.10       62.40
+  $80,000 to $89,999 |        243        3.38       65.78
+  $90,000 to $99,999 |        313        4.35       70.13
+$100,000 to $149,999 |      1,012       14.06       84.19
+$150,000 to $250,000 |        547        7.60       91.79
+    $250,000 or more |        179        2.49       94.28
+                   . |        412        5.72      100.00
+---------------------+-----------------------------------
+               Total |      7,197      100.00
+
+. 
+. save $data/2021_NHS_general_data_disd02.dta, replace
+file
+    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
+    > _response/data/2021_NHS_general_data_disd02.dta saved
+
+. 
+. ***--------------------------***
+. // IMPORT CPS DATA
+. ***--------------------------***
+. 
+. do $stata/$cps_dataset_filename.do
+
+. capture log using $stata/cps00016.log, replace
+
+. 
+. * NOTE: You need to set the Stata working directory to the path
+. * where the data file is located.
+. cd $data
+/Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_respo
+> nse/data
+
+. 
+. set more off
+
+. 
+. clear
+
+. quietly infix              ///
+>   int     year      1-4    ///
+>   byte    month     5-6    ///
+>   double  cpsid     7-20   ///
+>   byte    asecflag  21-21  ///
+>   double  asecwth   22-31  ///
+>   byte    statefip  32-33  ///
+>   long    county    34-38  ///
+>   double  hhincome  39-46  ///
+>   byte    pernum    47-48  ///
+>   double  asecwt    49-58  ///
+>   double  ftotval   59-68  ///
+>   double  inctot    69-77  ///
+>   using `"cps_00016.dat"'
+
+. 
+. replace asecwth  = asecwth  / 10000
+(2,270,485 real changes made)
+
+. replace asecwt   = asecwt   / 10000
+(2,270,485 real changes made)
+
+. 
+. format cpsid    %14.0f
+
+. format asecwth  %10.4f
+
+. format hhincome %8.0f
+
+. format asecwt   %10.4f
+
+. format ftotval  %10.0f
+
+. format inctot   %9.0f
+
+. 
+. label var year     `"Survey year"'
+
+. label var month    `"Month"'
+
+. label var cpsid    `"CPSID, household record"'
+
+. label var asecflag `"Flag for ASEC"'
+
+. label var asecwth  `"Annual Social and Economic Supplement Household weight"'
+
+. label var statefip `"State (FIPS code)"'
+
+. label var county   `"FIPS county code"'
+
+. label var hhincome `"Total household income"'
+
+. label var pernum   `"Person number in sample unit"'
+
+. label var asecwt   `"Annual Social and Economic Supplement Weight"'
+
+. label var ftotval  `"Total family income"'
+
+. label var inctot   `"Total personal income"'
+
+. 
+. label define month_lbl 01 `"January"'
+
+. label define month_lbl 02 `"February"', add
+
+. label define month_lbl 03 `"March"', add
+
+. label define month_lbl 04 `"April"', add
+
+. label define month_lbl 05 `"May"', add
+
+. label define month_lbl 06 `"June"', add
+
+. label define month_lbl 07 `"July"', add
+
+. label define month_lbl 08 `"August"', add
+
+. label define month_lbl 09 `"September"', add
+
+. label define month_lbl 10 `"October"', add
+
+. label define month_lbl 11 `"November"', add
+
+. label define month_lbl 12 `"December"', add
+
+. label values month month_lbl
+
+. 
+. label define asecflag_lbl 1 `"ASEC"'
+
+. label define asecflag_lbl 2 `"March Basic"', add
+
+. label values asecflag asecflag_lbl
+
+. 
+. label define statefip_lbl 01 `"Alabama"'
+
+. label define statefip_lbl 02 `"Alaska"', add
+
+. label define statefip_lbl 04 `"Arizona"', add
+
+. label define statefip_lbl 05 `"Arkansas"', add
+
+. label define statefip_lbl 06 `"California"', add
+
+. label define statefip_lbl 08 `"Colorado"', add
+
+. label define statefip_lbl 09 `"Connecticut"', add
+
+. label define statefip_lbl 10 `"Delaware"', add
+
+. label define statefip_lbl 11 `"District of Columbia"', add
+
+. label define statefip_lbl 12 `"Florida"', add
+
+. label define statefip_lbl 13 `"Georgia"', add
+
+. label define statefip_lbl 15 `"Hawaii"', add
+
+. label define statefip_lbl 16 `"Idaho"', add
+
+. label define statefip_lbl 17 `"Illinois"', add
+
+. label define statefip_lbl 18 `"Indiana"', add
+
+. label define statefip_lbl 19 `"Iowa"', add
+
+. label define statefip_lbl 20 `"Kansas"', add
+
+. label define statefip_lbl 21 `"Kentucky"', add
+
+. label define statefip_lbl 22 `"Louisiana"', add
+
+. label define statefip_lbl 23 `"Maine"', add
+
+. label define statefip_lbl 24 `"Maryland"', add
+
+. label define statefip_lbl 25 `"Massachusetts"', add
+
+. label define statefip_lbl 26 `"Michigan"', add
+
+. label define statefip_lbl 27 `"Minnesota"', add
+
+. label define statefip_lbl 28 `"Mississippi"', add
+
+. label define statefip_lbl 29 `"Missouri"', add
+
+. label define statefip_lbl 30 `"Montana"', add
+
+. label define statefip_lbl 31 `"Nebraska"', add
+
+. label define statefip_lbl 32 `"Nevada"', add
+
+. label define statefip_lbl 33 `"New Hampshire"', add
+
+. label define statefip_lbl 34 `"New Jersey"', add
+
+. label define statefip_lbl 35 `"New Mexico"', add
+
+. label define statefip_lbl 36 `"New York"', add
+
+. label define statefip_lbl 37 `"North Carolina"', add
+
+. label define statefip_lbl 38 `"North Dakota"', add
+
+. label define statefip_lbl 39 `"Ohio"', add
+
+. label define statefip_lbl 40 `"Oklahoma"', add
+
+. label define statefip_lbl 41 `"Oregon"', add
+
+. label define statefip_lbl 42 `"Pennsylvania"', add
+
+. label define statefip_lbl 44 `"Rhode Island"', add
+
+. label define statefip_lbl 45 `"South Carolina"', add
+
+. label define statefip_lbl 46 `"South Dakota"', add
+
+. label define statefip_lbl 47 `"Tennessee"', add
+
+. label define statefip_lbl 48 `"Texas"', add
+
+. label define statefip_lbl 49 `"Utah"', add
+
+. label define statefip_lbl 50 `"Vermont"', add
+
+. label define statefip_lbl 51 `"Virginia"', add
+
+. label define statefip_lbl 53 `"Washington"', add
+
+. label define statefip_lbl 54 `"West Virginia"', add
+
+. label define statefip_lbl 55 `"Wisconsin"', add
+
+. label define statefip_lbl 56 `"Wyoming"', add
+
+. label define statefip_lbl 61 `"Maine-New Hampshire-Vermont"', add
+
+. label define statefip_lbl 65 `"Montana-Idaho-Wyoming"', add
+
+. label define statefip_lbl 68 `"Alaska-Hawaii"', add
+
+. label define statefip_lbl 69 `"Nebraska-North Dakota-South Dakota"', add
+
+. label define statefip_lbl 70 `"Maine-Massachusetts-New Hampshire-Rhode Island-
+> Vermont"', add
+
+. label define statefip_lbl 71 `"Michigan-Wisconsin"', add
+
+. label define statefip_lbl 72 `"Minnesota-Iowa"', add
+
+. label define statefip_lbl 73 `"Nebraska-North Dakota-South Dakota-Kansas"', ad
+> d
+
+. label define statefip_lbl 74 `"Delaware-Virginia"', add
+
+. label define statefip_lbl 75 `"North Carolina-South Carolina"', add
+
+. label define statefip_lbl 76 `"Alabama-Mississippi"', add
+
+. label define statefip_lbl 77 `"Arkansas-Oklahoma"', add
+
+. label define statefip_lbl 78 `"Arizona-New Mexico-Colorado"', add
+
+. label define statefip_lbl 79 `"Idaho-Wyoming-Utah-Montana-Nevada"', add
+
+. label define statefip_lbl 80 `"Alaska-Washington-Hawaii"', add
+
+. label define statefip_lbl 81 `"New Hampshire-Maine-Vermont-Rhode Island"', add
+
+. label define statefip_lbl 83 `"South Carolina-Georgia"', add
+
+. label define statefip_lbl 84 `"Kentucky-Tennessee"', add
+
+. label define statefip_lbl 85 `"Arkansas-Louisiana-Oklahoma"', add
+
+. label define statefip_lbl 87 `"Iowa-N Dakota-S Dakota-Nebraska-Kansas-Minnesot
+> a-Missouri"', add
+
+. label define statefip_lbl 88 `"Washington-Oregon-Alaska-Hawaii"', add
+
+. label define statefip_lbl 89 `"Montana-Wyoming-Colorado-New Mexico-Utah-Nevada
+> -Arizona"', add
+
+. label define statefip_lbl 90 `"Delaware-Maryland-Virginia-West Virginia"', add
+
+. label define statefip_lbl 99 `"State not identified"', add
+
+. label values statefip statefip_lbl
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
+> isaster_response/stata/disd02b_redi_income.log
+  log type:  text
+ closed on:  18 Jul 2024, 17:59:11
+--------------------------------------------------------------------------------
