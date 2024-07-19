@@ -14,23 +14,47 @@ clear all
 set more off
 
 ***--------------------------***
-// REGRESSIONS
+// DATA
 ***--------------------------***
-use $data/2021_NHS_general_data_disd02.dta
+use $data/2021_NHS_general_data_disd02b.dta
+svyset [pweight = GeneralSampleWeightWeight]
 
-//Information regression
+***--------------------------***
+// OUTCOME: INFORMATION
+***--------------------------***
+
+*Base model: Disability only
+svy: reg mean_info disability 
+estimates store info_model_dis
+
+*Adding controls
 svy: reg mean_info disability male  ///  
 	mean_cbo new_disaster_experience i.insurance_ownership  /// 
 	c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
-estimates store info_model_regress
+estimates store info_model_controls
 	
 etable, showstars ///
-	estimates(info_model_regress) ///
+	estimates(info_model_dis info_model_controls) ///
 	mstat(N) mstat(r2) ///
 	export("$results/disd04_info_regression.docx", as(docx) replace)
+	
 
-//Confidence regression
-*Disability
+// VISUALIZE: Predicted information by disability status 
+quietly: ///
+svy: reg mean_info i.disability male  ///  
+	mean_cbo new_disaster_experience i.insurance_ownership  /// 
+	c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
+
+margins disability, atmeans
+marginsplot, xtitle("Disability Status") ytitle("Linear Prediction") ///
+	title("Predicted Information By Disability Status") graphregion(margin(r+10))
+graph export $results/disd04_info_margins_plot.pdf, replace
+
+***--------------------------***
+// OUTCOME: CONFIDENCE
+***--------------------------***
+
+*Base model: Disability only
 quietly: svy: ologit confidence_prep disability, ///
 	  or
 estimates store conf_model_dis
@@ -52,70 +76,10 @@ etable, showstars ///
 	estimates(conf_model_dis conf_model_male  conf_model_controls) /// conf_model_interact
 	mstat(N) mstat(r2_a) ///
 	export("$results/disd04_conf_nested_model.docx", as(docx) replace)
-
-
-//Preparedness stage regression
-*Disability
-quietly: svy: ologit preparedness_stage disability, ///
-	  or
-estimates store prep_model_dis
-
-*Adding gender
-quietly: svy: ologit preparedness_stage disability male, ///
-	or
-estimates store prep_model_male
-
-*Adding controls
-svy: ologit preparedness_stage disability male  ///  
-	 mean_cbo  new_disaster_experience i.insurance_ownership  /// 
-	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment, ///
-	  or  
-estimates store prep_model_controls
-
-* Put in table
-etable, showstars ///
-	estimates(prep_model_dis prep_model_male prep_model_controls) ///
-	mstat(N) mstat(r2_a) ///
-	export("$results/disd04_prep_nested_model.docx", as(docx) replace)
-
-//Preparedness stage nested model
-*Disability
-quietly: svy: ologit preparedness_stage disability, ///
-	  or
-estimates store prep_model_dis
-
-*Adding gender
-quietly: svy: ologit preparedness_stage disability male, ///
-	or
-estimates store prep_model_male
-
-*Adding controls
-svy: ologit preparedness_stage disability male  ///  
-	 mean_cbo  new_disaster_experience i.insurance_ownership  /// 
-	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment, ///
-	  or  
-estimates store prep_model_controls
-
-* Put in table
-etable, showstars ///
-	estimates(prep_model_dis prep_model_male prep_model_controls) ///
-	mstat(N) mstat(r2_a) ///
-	export("$results/disd04_prep_nested_model.docx", as(docx) replace)
 	
-***--------------------------***
-// VISUALIZATIONS
-***--------------------------***
-//Predicted information by disability status 
-svy: reg mean_info i.disability male  ///  
-	mean_cbo new_disaster_experience i.insurance_ownership  /// 
-	c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
 
-margins disability, atmeans
-marginsplot, xtitle("Disability Status") ytitle("Linear Prediction") ///
-	title("Predicted Information By Disability Status") graphregion(margin(r+10))
-graph export $results/disd04_info_margins_plot.pdf, replace
-
-//Conditional marginal effects of disability on confidence level
+// VISUALIZE: Conditional marginal effects of disability on confidence level
+quietly: ///
 svy: ologit confidence_prep i.disability male  ///  
 	 mean_cbo new_disaster_experience i.insurance_ownership ///
 	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment //
@@ -134,8 +98,37 @@ marginsplot, yline(0) ///
 	4 "Extremely confident",  ///
 	labsize(vsmall)) graphregion(margin(r+10))
 graph export $results/disd04_confidence_marginaleffects_plot.jpg, replace
+	
+***--------------------------***
+// OUTCOME: PREPAREDNESS
+***--------------------------***
 
-//Conditional marginal effects of disability on preparedness level
+*Base model: Disability only
+quietly: svy: ologit preparedness_stage disability, ///
+	  or
+estimates store prep_model_dis
+
+*Adding gender
+quietly: svy: ologit preparedness_stage disability male, ///
+	or
+estimates store prep_model_male
+
+*Adding controls
+svy: ologit preparedness_stage disability male  ///  
+	 mean_cbo  new_disaster_experience i.insurance_ownership  /// 
+	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment, ///
+	  or  
+estimates store prep_model_controls
+
+* Put in table
+etable, showstars ///
+	estimates(prep_model_dis prep_model_male prep_model_controls) ///
+	mstat(N) mstat(r2_a) ///
+	export("$results/disd04_prep_nested_model.docx", as(docx) replace)
+
+
+// VISUALIZE: Conditional marginal effects of disability on preparedness level
+quietly: ///
 svy: ologit preparedness_stage i.disability male  ///  
 	 mean_cbo new_disaster_experience i.insurance_ownership  /// 
 	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
@@ -155,7 +148,7 @@ marginsplot, yline(0) ///
 	labsize(vsmall)) graphregion(margin(r+10))
 graph export $results/disd04_prep_marginaleffects_plot.jpg, replace
 
-//Conditional marginal effects of disability on preparedness level, controlling for information and confidence
+	
 ***--------------------------***
 // OUTCOME: PREPAREDNESS ~ CONFIDENCE & INFO
 ***--------------------------***	
@@ -188,6 +181,9 @@ etable, showstars ///
 	mstat(N) mstat(r2_a) ///
 export("$results/disd04_prepconf_nested_model.docx", as(docx) replace)
 
+
+// VISUALIZE: Conditional marginal effects of disability on preparedness level, controlling for information and confidence
+quietly: ///
 svy: ologit preparedness_stage i.disability mean_info confidence_prep male  ///  
 	 mean_cbo new_disaster_experience i.insurance_ownership  /// 
 	 c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
@@ -206,6 +202,8 @@ marginsplot, yline(0) ///
 	4 `""Been prepared for" "more than a year," "continues preparing""',  ///
 	labsize(vsmall)) graphregion(margin(r+10))
 graph export $results/disd04_prep_infoconfidence_marginaleffects_plot.jpg, replace
+
+
 ***--------------------------***
 log close 
 
