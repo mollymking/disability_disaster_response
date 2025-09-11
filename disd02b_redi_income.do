@@ -1,4 +1,4 @@
-log using $stata/disd02b_redi_income.log, replace
+log using $stata/disd02b_redi_income.log, name(redi_income) replace
 
 //  github:		disability_disaster_response
 
@@ -105,6 +105,6 @@ gen inc_1k = income_redi/1000
 save $data/2021_NHS_general_data_disd02b.dta, replace
 
 ***--------------------------***
-log close
+log close redi_income
 
 exit
