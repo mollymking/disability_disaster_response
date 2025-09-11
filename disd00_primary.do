@@ -40,10 +40,9 @@ global data "~/Desktop/disability_disaster_response/data"
 global results "~/Desktop/disability_disaster_response/results"
 
 ***--------------------------***
-cd $stata
 
-do disd01_import.do 		// import and add survey weights
-do disd02_variables.do 		// recode variables
-do disd02b_redi_income.do	// convert categorical to continuous income
-do disd03_descriptives.do	// descriptive statistics
-do disd04_regress.do		// regressions
+do $stata/disd01_import.do 			// import and add survey weights
+do $stata/disd02_variables.do 		// recode variables
+do $stata/disd02b_redi_income.do 	// convert categorical to continuous income
+do $stata/disd03_descriptives.do 	// descriptive statistics
+do $stata/disd04_regress.do 		// regressions
