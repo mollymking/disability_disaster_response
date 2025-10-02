@@ -1,3 +1,4 @@
+capture log close 
 log using $stata/disd04_regress.log, replace
 
 //  github:		disability_disaster_response

@@ -1,3 +1,4 @@
+capture log close
 log using $stata/disd02b_redi_income.log, name(redi_income) replace
 
 //  github:		disability_disaster_response

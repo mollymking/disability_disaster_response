@@ -1,5 +1,6 @@
 //  github:		disability_disaster_response
 
+capture log close
 log using $stata/disd03_descriptives.log, replace
 
 //  author:		Annie Yaeger 
