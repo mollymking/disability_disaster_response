@@ -3,7 +3,7 @@
        log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
 > isaster_response/stata/disd03_descriptives.log
   log type:  text
- opened on:  18 Jul 2024, 17:47:21
+ opened on:  25 Sep 2025, 17:43:09
 
 . 
 . //  author:             Annie Yaeger 
@@ -27,80 +27,110 @@
 . use $data/2021_NHS_general_data_disd02b.dta
 
 . 
-. //Confidence, preparedness stage, and info by disability status
-. dtable i.confidence_prep i.preparedness_stage mean_info         ///
->         male /// 
->         c.income_redi i.insurance_ownership mean_cbo  ///
->         new_disaster_experience i.education i.race_ethnicity i.age i.simple_em
-> ployment, by(disability) ///
->         export("$results/disd03_dtable_disability.docx", as(docx) replace)
+. svyset _n, weight(GeneralSampleWeightWeight)
 
--------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                                                               disability                              
-                                                                                     No Disability             Disability                Total         
--------------------------------------------------------------------------------------------------------------------------------------------------------
-N                                                                                         5,149 (71.5%)           2,048 (28.5%)          7,197 (100.0%)
-confidence_prep                                                                                                                                        
-  Not at all confident                                                                       119 (2.4%)              101 (5.1%)              220 (3.1%)
-  Slighly confident                                                                         586 (11.7%)             283 (14.2%)             869 (12.4%)
-  Somewhat confident                                                                      1,406 (28.0%)             498 (25.1%)           1,904 (27.2%)
-  Moderately confident                                                                    1,713 (34.1%)             530 (26.7%)           2,243 (32.0%)
-  Extremely confident                                                                     1,199 (23.9%)             576 (29.0%)           1,775 (25.3%)
-preparedness_stage                                                                                                                                     
-  I am NOT prepared, and I do not intend to prepare in the next year                        543 (11.1%)             269 (13.9%)             812 (11.9%)
-  I am NOT prepared, but I intend to start preparing in the next year                       916 (18.8%)             331 (17.1%)           1,247 (18.3%)
-  I am NOT prepared, but I intend to get prepared in the next six months                  1,151 (23.6%)             372 (19.2%)           1,523 (22.4%)
-  I have been prepared for the last year                                                  1,200 (24.6%)             452 (23.4%)           1,652 (24.3%)
-  I have been prepared for MORE than a year and I continue preparing                      1,066 (21.9%)             510 (26.4%)           1,576 (23.1%)
-Mean info: alerts + plan + saving + drills + comm + docs + neighbors + supplies           0.398 (0.270)           0.356 (0.257)           0.386 (0.267)
-male                                                                                      0.438 (0.496)           0.489 (0.500)           0.453 (0.498)
-REDI continuous income income                                                   77,928.929 (71,872.905) 70,960.221 (77,541.262) 75,918.942 (73,614.630)
-insurance_ownership                                                                                                                                    
-  Renter with insurance                                                                     787 (16.1%)             406 (20.7%)           1,193 (17.4%)
-  Renter without insurance                                                                  848 (17.4%)             357 (18.2%)           1,205 (17.6%)
-  Owner with insurance                                                                    2,832 (58.0%)           1,054 (53.9%)           3,886 (56.8%)
-  Owner without insurance                                                                    418 (8.6%)              140 (7.2%)              558 (8.2%)
-mean_cbo                                                                                  0.974 (1.091)           1.523 (1.229)           1.130 (1.159)
-new_disaster_experience                                                                   0.541 (0.498)           0.723 (0.448)           0.593 (0.491)
-education                                                                                                                                              
-  Less than high school diploma                                                              112 (2.2%)               85 (4.2%)              197 (2.8%)
-  High school degree or diploma                                                             959 (18.9%)             400 (19.8%)           1,359 (19.2%)
-  Some college, no degree                                                                 1,070 (21.1%)             456 (22.6%)           1,526 (21.5%)
-  Associate's degree                                                                        589 (11.6%)             226 (11.2%)             815 (11.5%)
-  Bachelor's degree                                                                       1,285 (25.3%)             366 (18.1%)           1,651 (23.3%)
-  Post graduate work/degree or professional degree                                        1,061 (20.9%)             487 (24.1%)           1,548 (21.8%)
-race_ethnicity                                                                                                                                         
-  White (non-Hispanic)                                                                    3,176 (61.7%)           1,343 (65.6%)           4,519 (62.8%)
-  Black or African American                                                                 525 (10.2%)              161 (7.9%)              686 (9.5%)
-  Asian                                                                                      302 (5.9%)               36 (1.8%)              338 (4.7%)
-  Hispanic/Latino                                                                           717 (13.9%)             302 (14.7%)           1,019 (14.2%)
-  Other                                                                                      278 (5.4%)              105 (5.1%)              383 (5.3%)
-  Multiple                                                                                   151 (2.9%)              101 (4.9%)              252 (3.5%)
-age                                                                                                                                                    
-  18-29                                                                                   1,132 (22.0%)             343 (16.7%)           1,475 (20.5%)
-  30-39                                                                                   1,095 (21.3%)             349 (17.0%)           1,444 (20.1%)
-  40-49                                                                                     756 (14.7%)             377 (18.4%)           1,133 (15.7%)
-  50-59                                                                                     780 (15.1%)             378 (18.5%)           1,158 (16.1%)
-  60-69                                                                                     815 (15.8%)             362 (17.7%)           1,177 (16.4%)
-  70-79                                                                                      496 (9.6%)              188 (9.2%)              684 (9.5%)
-  Over 80                                                                                     75 (1.5%)               51 (2.5%)              126 (1.8%)
-simple_employment                                                                                                                                      
-  Unemployed                                                                              1,193 (24.1%)             652 (33.0%)           1,845 (26.6%)
-  Retired                                                                                 1,041 (21.0%)             523 (26.5%)           1,564 (22.6%)
-  Employed                                                                                2,725 (55.0%)             798 (40.4%)           3,523 (50.8%)
--------------------------------------------------------------------------------------------------------------------------------------------------------
-(collection DTable exported to file
- /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_re
- > sponse/results/disd03_dtable_disability.docx)
+Sampling weights: <none>
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+        Weight 1: GeneralSampleWeightWeight
+
+. svydescribe
+
+Survey: Describing stage 1 sampling units
+
+Sampling weights: <none>
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+        Weight 1: GeneralSampleWeightWeight
+
+                                    Number of obs per unit
+ Stratum   # units     # obs       Min      Mean       Max
+----------------------------------------------------------
+       1     7,197     7,197         1       1.0         1
+----------------------------------------------------------
+       1     7,197     7,197         1       1.0         1
 
 . 
-.         
+. //Confidence, preparedness stage, and info by disability status
+. dtable mean_info i.confidence_prep i.preparedness_stage         ///
+>         new_disaster_experience i.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  i.simple
+> _employment /// 
+>         , by(disability) svy ///
+>         export("$results/disd03_dtable_disability.docx", as(docx) replace)
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                        Disability                              
+                                                                              No Disability             Disability                Total         
+------------------------------------------------------------------------------------------------------------------------------------------------
+N                                                                                  6,125 (85.1%)           1,072 (14.9%)          7,197 (100.0%)
+Mean information                                                                   0.385 (0.275)           0.331 (0.262)           0.377 (0.274)
+Confidence level                                                                                                                                
+  Not at all confident                                                                160 (2.7%)               58 (5.7%)              219 (3.1%)
+  Slightly confident                                                                 730 (12.2%)             143 (14.1%)             874 (12.5%)
+  Somewhat confident                                                               1,709 (28.7%)             290 (28.4%)           1,999 (28.6%)
+  Moderately confident                                                             2,003 (33.6%)             270 (26.5%)           2,273 (32.5%)
+  Extremely confident                                                              1,363 (22.8%)             258 (25.3%)           1,621 (23.2%)
+Preparedness Stage                                                                                                                              
+  I am NOT prepared, and I do not intend to prepare in the next year                 749 (13.1%)             159 (16.0%)             908 (13.5%)
+  I am NOT prepared, but I intend to start preparing in the next year              1,091 (19.1%)             226 (22.6%)           1,317 (19.6%)
+  I am NOT prepared, but I intend to get prepared in the next six months           1,333 (23.3%)             192 (19.3%)           1,525 (22.7%)
+  I have been prepared for the last year                                           1,424 (24.9%)             198 (19.8%)           1,622 (24.1%)
+  I have been prepared for MORE than a year and I continue preparing               1,124 (19.6%)             222 (22.3%)           1,346 (20.0%)
+Disaster Experience                                                                0.511 (0.500)           0.717 (0.450)           0.542 (0.498)
+Rent / Own Home & Insurance                                                                                                                     
+  Renter with insurance                                                              827 (14.4%)             194 (19.3%)           1,021 (15.1%)
+  Renter without insurance                                                           995 (17.3%)             221 (21.9%)           1,217 (18.0%)
+  Owner with insurance                                                             3,431 (59.7%)             504 (49.9%)           3,934 (58.3%)
+  Owner without insurance                                                             492 (8.6%)               90 (8.9%)              581 (8.6%)
+Mean Community Involvement                                                         0.859 (1.014)           1.384 (1.158)           0.937 (1.054)
+Woman/non-binary/other                                                             0.520 (0.500)           0.499 (0.500)           0.517 (0.500)
+Race / Ethnicity                                                                                                                                
+  White (non-Hispanic)                                                             3,966 (64.8%)             703 (65.5%)           4,668 (64.9%)
+  Black or African American                                                          647 (10.6%)             109 (10.1%)             756 (10.5%)
+  Asian                                                                               381 (6.2%)               14 (1.3%)              395 (5.5%)
+  Hispanic/Latino                                                                    672 (11.0%)             149 (13.9%)             821 (11.4%)
+  Other                                                                               337 (5.5%)               50 (4.6%)              387 (5.4%)
+  Multiple                                                                            121 (2.0%)               48 (4.5%)              170 (2.4%)
+Age                                                                                                                                             
+  18-29                                                                            1,336 (21.8%)             202 (18.8%)           1,538 (21.4%)
+  30-39                                                                            1,097 (17.9%)             134 (12.5%)           1,231 (17.1%)
+  40-49                                                                              966 (15.8%)             197 (18.4%)           1,164 (16.2%)
+  50-59                                                                            1,037 (16.9%)             194 (18.1%)           1,231 (17.1%)
+  60-69                                                                              901 (14.7%)             158 (14.7%)           1,059 (14.7%)
+  70-79                                                                               538 (8.8%)               83 (7.7%)              621 (8.6%)
+  Over 80                                                                             249 (4.1%)              105 (9.8%)              354 (4.9%)
+Education level                                                                                                                                 
+  Less than high school diploma                                                       535 (8.8%)             317 (29.9%)             851 (12.0%)
+  High school degree or diploma                                                    1,689 (28.0%)             266 (25.1%)           1,955 (27.5%)
+  Some college, no degree                                                          1,412 (23.4%)             203 (19.2%)           1,615 (22.7%)
+  Associate's degree                                                                  534 (8.8%)               46 (4.4%)              580 (8.2%)
+  Bachelor's degree                                                                1,213 (20.1%)             110 (10.4%)           1,324 (18.6%)
+  Post graduate work/degree or professional degree                                   660 (10.9%)             118 (11.1%)             778 (10.9%)
+REDI continuous income income                                            85,129.023 (76,276.717) 69,674.731 (81,204.765) 82,825.362 (77,223.447)
+Employment Status                                                                                                                               
+  Unemployed                                                                       1,533 (26.0%)             399 (39.0%)           1,931 (27.9%)
+  Retired                                                                          1,306 (22.1%)             311 (30.5%)           1,618 (23.4%)
+  Employed                                                                         3,064 (51.9%)             312 (30.5%)           3,376 (48.8%)
+------------------------------------------------------------------------------------------------------------------------------------------------
+(collection DTable exported to file
+ ~/Documents/SocResearch/climate_disability/disability_disaster_response/resul
+ > ts/disd03_dtable_disability.docx)
+
+. 
+. 
 . //Percent reporting mean information level, split by disability status
 . capture egen disabilitymean = mean(disability), by(mean_info)
 
 . capture egen dispercent = mean (100 * disability), by(mean_info)
 
-. twoway connected dispercent mean_info, ytitle(Percent Disability) sort
+. twoway connected dispercent mean_info, ytitle(Percent Disability) sort 
 
 . 
 . frame create disability_info_percents
@@ -112,15 +142,9 @@ simple_employment
 . 
 . tab mean_info disability, matcell(x)
 
-Mean info: |
-  alerts + |
-    plan + |
-  saving + |
-  drills + |
-    comm + |
-    docs + |
- neighbors |      disability
-+ supplies | No Disabi  Disabilit |     Total
+      Mean |
+informatio |      Disability
+         n | No Disabi  Disabilit |     Total
 -----------+----------------------+----------
          0 |       526        175 |       701 
   .0833333 |       396        265 |       661 
@@ -180,50 +204,10 @@ Mean info: |
  26. |    Disability          1    61 |
      +--------------------------------+
 
+. 
 . egen r_tot = total(r), by(disability)
 
 . gen r_pct = (r/r_tot)*100
-
-. list
-
-     +---------------------------------------------------+
-     |    disability   mean_i~o     r   r_tot      r_pct |
-     |---------------------------------------------------|
-  1. | No Disability          0   526    5149   10.21558 |
-  2. |    Disability          0   175    2048   8.544922 |
-  3. | No Disability   .0833333   396    5149   7.690814 |
-  4. |    Disability   .0833333   265    2048   12.93945 |
-  5. | No Disability   .1666667   450    5149   8.739561 |
-     |---------------------------------------------------|
-  6. |    Disability   .1666667   209    2048   10.20508 |
-  7. | No Disability        .25   610    5149   11.84696 |
-  8. |    Disability        .25   303    2048   14.79492 |
-  9. | No Disability   .3333333   637    5149   12.37133 |
- 10. |    Disability   .3333333   274    2048   13.37891 |
-     |---------------------------------------------------|
- 11. | No Disability   .4166667   574    5149    11.1478 |
- 12. |    Disability   .4166667   213    2048   10.40039 |
- 13. | No Disability         .5   493    5149   9.574675 |
- 14. |    Disability         .5   147    2048   7.177734 |
- 15. | No Disability   .5833333   398    5149   7.729656 |
-     |---------------------------------------------------|
- 16. |    Disability   .5833333   128    2048       6.25 |
- 17. | No Disability   .6666667   302    5149   5.865217 |
- 18. |    Disability   .6666667    96    2048     4.6875 |
- 19. | No Disability        .75   227    5149   4.408623 |
- 20. |    Disability        .75    83    2048   4.052734 |
-     |---------------------------------------------------|
- 21. | No Disability   .8333333   213    5149   4.136725 |
- 22. |    Disability   .8333333    57    2048   2.783203 |
- 23. | No Disability   .9166667   132    5149   2.563605 |
- 24. |    Disability   .9166667    37    2048   1.806641 |
- 25. | No Disability          1   191    5149   3.709458 |
-     |---------------------------------------------------|
- 26. |    Disability          1    61    2048   2.978516 |
-     +---------------------------------------------------+
-
-. 
-. twoway connected  r_pct mean_info, by(disability)
 
 . 
 . twoway ///
@@ -237,29 +221,25 @@ Mean info: |
 
 .         
 . graph save "Graph" "$results/disd03_mean_info_by_disability_line.gph", replace
-file /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_
-> response/results/disd03_mean_info_by_disability_line.gph saved
+file ~/Documents/SocResearch/climate_disability/disability_disaster_response/res
+> ults/disd03_mean_info_by_disability_line.gph saved
 
 . graph export $results/disd03_mean_info_by_disability_line.pdf, replace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_mean_info_by_disability_line.pdf saved as PDF
-    format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd03_mean_info_by_disability_line.pdf saved as PDF format
 
 . graph export $results/disd03_mean_info_by_disability_line.jpg, replace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_mean_info_by_disability_line.jpg saved as JPG
-    format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd03_mean_info_by_disability_line.jpg saved as JPG format
 
-.         
-. frame change default
-
-. frame drop disability_info_percents
-
-. 
-. //Prep by disability histogram
-. graph hbar (percent) not_prepared intend_prep_year intend_prep_6months prepare
+. /*
+> frame change default
+> frame drop disability_info_percents
+> 
+> //Prep by disability histogram
+> graph hbar (percent) not_prepared intend_prep_year intend_prep_6months prepare
 > d_year prepared_overyear, ///
 >         over(disability, label(angle(50) labsize(small))) vertical percentage 
 > ///
@@ -283,43 +263,14 @@ file
 >         bar(5, fcolor("88 80 141") fintensity(inten100) lcolor("88 80 141") lw
 > idth(small)) ///
 >         ytitle("Percent of Respondents", size(medium))
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-
-. 
-. graph save "Graph" "$results/disd03_prepstage_by_disability_histogram.gph", re
+> 
+> graph save "Graph" "$results/disd03_prepstage_by_disability_histogram.gph", re
 > place
-file /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_
-> response/results/disd03_prepstage_by_disability_histogram.gph saved
-
-. graph export $results/disd03_prepstage_by_disability_histogram.pdf, replace
-file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_prepstage_by_disability_histogram.pdf saved as
-    PDF format
-
-. graph export $results/disd03_prepstage_by_disability_histogram.jpg, replace
-file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_prepstage_by_disability_histogram.jpg saved as
-    JPG format
-
-. 
-. //Confidence by disability histogram
-.         graph hbar (percent) extremely_conf moderate_conf somewhat_conf slight
+> graph export $results/disd03_prepstage_by_disability_histogram.pdf, replace
+> graph export $results/disd03_prepstage_by_disability_histogram.jpg, replace
+> 
+> //Confidence by disability histogram
+>         graph hbar (percent) extremely_conf moderate_conf somewhat_conf slight
 > ly_conf not_conf, ///
 >         over(disability, label(angle(50) labsize(small))) vertical percentage 
 > ///
@@ -341,40 +292,11 @@ file
 >         bar(5, fcolor("88 80 141") fintensity(inten100) lcolor("88 80 141") lw
 > idth(small)) ///
 >         ytitle("Percent of Respondents", size(medium))
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-(note:  named style small not found in class linewidth, default attributes
-    used)
-(note:  linewidth not found in scheme, default attributes used)
-
-.         
-. graph save "Graph" "$results/disd03_conf_by_disability_histogram.gph", replace
-file /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_
-> response/results/disd03_conf_by_disability_histogram.gph saved
-
-. graph export $results/disd03_conf_by_disability_histogram.pdf, replace
-file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_conf_by_disability_histogram.pdf saved as PDF
-    format
-
-. graph export $results/disd03_conf_by_disability_histogram.jpg, replace
-file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd03_conf_by_disability_histogram.jpg saved as JPG
-    format
-
-. 
+>         
+> graph save "Graph" "$results/disd03_conf_by_disability_histogram.gph", replace
+> graph export $results/disd03_conf_by_disability_histogram.pdf, replace
+> graph export $results/disd03_conf_by_disability_histogram.jpg, replace
+> */
 . 
 . ***--------------------------***
 . log close 
@@ -382,5 +304,5 @@ file
        log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
 > isaster_response/stata/disd03_descriptives.log
   log type:  text
- closed on:  18 Jul 2024, 17:47:25
+ closed on:  25 Sep 2025, 17:43:11
 --------------------------------------------------------------------------------

@@ -1,5 +1,4 @@
 //  github:		disability_disaster_response
-
 capture log close
 log using $stata/disd03_descriptives.log, replace
 
@@ -19,18 +18,21 @@ set more off
 ***--------------------------***
 use $data/2021_NHS_general_data_disd02b.dta
 
+svyset _n, weight(GeneralSampleWeightWeight)
+svydescribe
+
 //Confidence, preparedness stage, and info by disability status
-dtable i.confidence_prep i.preparedness_stage mean_info 	///
-	male /// 
-	c.income_redi i.insurance_ownership mean_cbo  ///
-	new_disaster_experience i.education i.race_ethnicity i.age i.simple_employment, by(disability) ///
+dtable mean_info i.confidence_prep i.preparedness_stage 	///
+	new_disaster_experience i.insurance_ownership mean_cbo  ///
+	woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  i.simple_employment /// 
+	, by(disability) svy ///
 	export("$results/disd03_dtable_disability.docx", as(docx) replace)
 
-	
+
 //Percent reporting mean information level, split by disability status
 capture egen disabilitymean = mean(disability), by(mean_info)
 capture egen dispercent = mean (100 * disability), by(mean_info)
-twoway connected dispercent mean_info, ytitle(Percent Disability) sort
+twoway connected dispercent mean_info, ytitle(Percent Disability) sort 
 
 frame create disability_info_percents
 frame change disability_info_percents
@@ -40,11 +42,9 @@ tab mean_info disability, matcell(x)
 gen r = 1
 collapse (count) r, by(mean_info disability)
 list
+
 egen r_tot = total(r), by(disability)
 gen r_pct = (r/r_tot)*100
-list
-
-twoway connected  r_pct mean_info, by(disability)
 
 twoway ///
 	(connected r_pct mean_info if disability==1, color("0 63 92")) ///
@@ -57,7 +57,7 @@ twoway ///
 graph save "Graph" "$results/disd03_mean_info_by_disability_line.gph", replace
 graph export $results/disd03_mean_info_by_disability_line.pdf, replace
 graph export $results/disd03_mean_info_by_disability_line.jpg, replace
-	
+/*
 frame change default
 frame drop disability_info_percents
 
@@ -102,7 +102,7 @@ graph export $results/disd03_prepstage_by_disability_histogram.jpg, replace
 graph save "Graph" "$results/disd03_conf_by_disability_histogram.gph", replace
 graph export $results/disd03_conf_by_disability_histogram.pdf, replace
 graph export $results/disd03_conf_by_disability_histogram.jpg, replace
-
+*/
 
 ***--------------------------***
 log close 
