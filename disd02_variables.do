@@ -1,3 +1,4 @@
+capture log close
 log using $stata/disd02_variables.log, replace
 
 ***--------------------------***
@@ -18,11 +19,11 @@ use $data/2021_NHS_general_data.dta
 gen disability = .
 replace disability = 1 if D4ADoyouhaveadisabilityor == "Disability"
 replace disability = 0 if D4ADoyouhaveadisabilityor == "No Disability"
-tab D4ADoyouhaveadisabilityor disability, m
 
 label define Disability_label 1 Disability 0 "No Disability"
 label values disability Disability_label
-tab disability, m
+label var disability "Disability"
+tab D4ADoyouhaveadisabilityor disability, m
 
 //EDUCATION
 tab Educationascapturedinrawsur, m
@@ -35,7 +36,6 @@ replace education = 4 if Educationascapturedinrawsur == "Bachelor's degree"
 replace education = 5 if Educationascapturedinrawsur == "Post graduate work/degree or professional degree"
 replace education = . if Educationascapturedinrawsur == "Don't know"
 replace education = . if Educationascapturedinrawsur == "Prefer not to answer"
-tab Educationascapturedinrawsur education, m
 
 label define Education_label ///
 	0 "Less than high school diploma" ///
@@ -45,7 +45,8 @@ label define Education_label ///
 	4 "Bachelor's degree" ///
 	5 "Post graduate work/degree or professional degree" 
 label values education Education_label
-tab education, m
+label var education "Education level"
+tab Educationascapturedinrawsur education, m
 
 
 //MALE
@@ -58,11 +59,27 @@ replace male = 1 if Genderascapturedinrawsurvey == "Male"
 replace male = . if ///
 	Genderascapturedinrawsurvey == "Don't know" | ///
 	Genderascapturedinrawsurvey == "Prefer not to answer"
-tab Genderascapturedinrawsurvey male, m
 
 label define Male_label 0 "Not male" 1 Male
 label values male Male_label
-tab male, m
+tab Genderascapturedinrawsurvey male, m
+
+
+gen woman_nb = .
+replace woman_nb = 0 if	Genderascapturedinrawsurvey == "Male"
+replace woman_nb = 1 if ///
+	Genderascapturedinrawsurvey == "Female" | ///
+	Genderascapturedinrawsurvey== "Non-binary / third gender" | ///
+	Genderascapturedinrawsurvey == "I use another term (specify):" 
+replace woman_nb = . if ///
+	Genderascapturedinrawsurvey == "Don't know" | ///
+	Genderascapturedinrawsurvey == "Prefer not to answer"
+label define woman_nb 0 "Man" 1 "Woman/non-binary/third gender/other"
+
+label values woman_nb woman_nb
+label var woman_nb "Woman/non-binary/other"
+tab woman_nb Genderascapturedinrawsurvey, m
+
 
 //NEW_DISASTER_EXPERIENCE
 gen new_disaster_experience = .
@@ -70,11 +87,11 @@ replace new_disaster_experience = 0 if GENEXP1Haveyouoryourfamily == "No"
 replace new_disaster_experience = 1 if GENEXP1Haveyouoryourfamily == "Yes"
 replace new_disaster_experience = . if GENEXP1Haveyouoryourfamily == "Don't know"
 replace new_disaster_experience = . if GENEXP1Haveyouoryourfamily == "Prefer not to answer"
-tab GENEXP1Haveyouoryourfamily new_disaster_experience, m
 
 label define new_disaster_experience_label 0 No 1 Yes 
 label values new_disaster_experience new_disaster_experience_label
-tab new_disaster_experience, m
+label var new_disaster_experience "Disaster Experience"
+tab GENEXP1Haveyouoryourfamily new_disaster_experience, m
 
 //AGE
 gen age = .
@@ -88,6 +105,7 @@ replace age = 6 if QNS6WhatisyourageAGE == "Over 80"
 
 label define Age_label 0 "18-29" 1 "30-39" 2 "40-49" 3 "50-59" 4 "60-69" 5 "70-79" 6 "Over 80"
 label values age Age_label
+label var age "Age"
 tab QNS6WhatisyourageAGE age, m
 
 //INSURANCE_OWNERSHIP
@@ -100,6 +118,7 @@ replace insurance = . if FP1Doyouhavehomeownersorr == "Don't know"
 
 label define Insurance_label 0 No 1 Yes
 label values insurance Insurance_label
+label var insurance "Home insurance"
 tab FP1Doyouhavehomeownersorr insurance, m
 
 //home ownership recode
@@ -109,6 +128,7 @@ replace home_ownership = 0 if D8Doyourentorownyourhome == "Rent"
 
 label define Home_ownership_label 1 Own 0 Rent
 label values home_ownership Home_ownership_label
+label var home_ownership "Own / Rent Home"
 tab D8Doyourentorownyourhome home_ownership, m
 
 //insurance_ownership recode
@@ -124,6 +144,8 @@ label define Insurance_own_label ///
 	3 "Owner with insurance" ///
 	4 "Owner without insurance"
 label values insurance_ownership Insurance_own_label
+label var insurance_ownership "Rent / Own Home & Insurance"
+
 tab insurance_ownership insurance, m
 tab insurance_ownership home_ownership, m
 
@@ -299,6 +321,7 @@ tab senior_support
 //mean
 gen mean_cbo = (animal_welfare + childcare + emergency_services + faith_services + financial_support + food_pantry + general_services + housing_support + immigrant_support + legal_aid + small_business + senior_support)/12
 sum mean_cbo, det
+label var mean_cbo "Mean Community Involvement"
 
 //SIMPLE_EMPLOYMENT
 gen simple_employment = .
@@ -316,6 +339,7 @@ replace simple_employment = 2 if ///
 
 label define Simple_employment_label 0 "Unemployed" 1 "Retired" 2 "Employed"
 label values simple_employment Simple_employment_label
+label var simple_employment "Employment Status"
 tab Employmentascapturedinrawsu simple_employment, m
 
 //RACE/ETHNICITY
@@ -376,6 +400,8 @@ replace race_ethnicity = 4 if ///
 *Two or more
 replace race_ethnicity = 5 if D4Whichofthefollowingdescr == "Two or More Races" 
 
+replace race_ethnicity = 4 if race_ethnicity == .
+
 label define race_ethnicity_label ///
 	0 "White (non-Hispanic)" ///
 	1 "Black or African American" ///
@@ -384,13 +410,12 @@ label define race_ethnicity_label ///
 	4 "Other" ///
 	5 "Multiple"
 label values  race_ethnicity race_ethnicity_label
+label var race_ethnicity "Race / Ethnicity"
+
 tab race_ethnicity, m
 tab race_ethnicity, m nolabel
 tab race race_ethnicity, m
 
-replace race_ethnicity = 4 if race_ethnicity == .
-label values  race_ethnicity race_ethnicity_label
-tab race race_ethnicity, m
 tab D4Whichofthefollowingdescr race_ethnicity, m
 tab Ethnicityafterdatacleaningpr race_ethnicity, m
 
@@ -406,9 +431,15 @@ replace confidence_prep = 3 if C2Howconfidentareyouthaty == "Moderately confiden
 replace confidence_prep = 4 if C2Howconfidentareyouthaty == "Extremely confident"
 replace confidence_prep = . if C2Howconfidentareyouthaty ==  "Don't know" | ///
 							   C2Howconfidentareyouthaty == "Prefer not to answer"
-
-label define confidence_rev_label 4 "Extremely confident" 3 "Moderately confident" 2 "Somewhat confident" 1 "Slighly confident" 0 "Not at all confident"
+							   
+label define confidence_rev_label ///
+	0 "Not at all confident" ///
+	1 "Slightly confident" ///
+	2 "Somewhat confident" ///
+	3 "Moderately confident" ///
+	4 "Extremely confident" 
 label values confidence_prep confidence_rev_label
+label var confidence_prep "Confidence level"
 tab confidence_prep, m
 
 
@@ -582,7 +613,7 @@ tab info_insure_property A3_L, m
 
 //mean info
 gen mean_info = (info_alerts_warnings + info_plan + info_save + info_emergency_drills + info_communication + info_documents + info_neighbors + info_supplies + info_involved + info_home_safer + info_evacuation + info_insure_property)/12
-label var mean_info "Mean info: alerts + plan + saving + drills + comm + docs + neighbors + supplies + involved + home + evac"
+label var mean_info "Mean information"
 sum mean_info, det
 
 
@@ -596,7 +627,6 @@ replace preparedness_stage = 3 if ST_STG1Thinkingaboutpreparing == "I have been 
 replace preparedness_stage = 4 if ST_STG1Thinkingaboutpreparing == "I have been prepared for MORE than a year and I continue preparing"
 replace preparedness_stage = . if ST_STG1Thinkingaboutpreparing == "Don't know"
 replace preparedness_stage = . if ST_STG1Thinkingaboutpreparing == "Prefer not to answer"
-tab ST_STG1Thinkingaboutpreparing preparedness_stage, m
 
 label define Preparedness_stage_label ///
 	0 "I am NOT prepared, and I do not intend to prepare in the next year" ///
@@ -605,7 +635,8 @@ label define Preparedness_stage_label ///
 	3 "I have been prepared for the last year" ///
 	4 "I have been prepared for MORE than a year and I continue preparing"
 label values preparedness_stage Preparedness_stage_label
-tab preparedness_stage, m
+label var preparedness_stage "Preparedness Stage"
+tab ST_STG1Thinkingaboutpreparing preparedness_stage, m
 
 //Preparedness stage recode for histograms
 tab preparedness_stage
