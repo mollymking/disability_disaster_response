@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
-> isaster_response/stata/disd04_regress.log
+       log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_response/stata/disd04_regress.log
   log type:  text
- opened on:  18 Jul 2024, 19:09:26
+ opened on:  26 Sep 2025, 15:23:20
 
 . 
 . //  github:             disability_disaster_response
@@ -28,14 +27,34 @@
 . ***--------------------------***
 . use $data/2021_NHS_general_data_disd02b.dta
 
-. svyset [pweight = GeneralSampleWeightWeight]
+. svyset _n, weight(GeneralSampleWeightWeight)
 
-Sampling weights: GeneralSampleWeightWeight
+Sampling weights: <none>
              VCE: linearized
      Single unit: missing
         Strata 1: <one>
  Sampling unit 1: <observations>
            FPC 1: <zero>
+        Weight 1: GeneralSampleWeightWeight
+
+. svydescribe
+
+Survey: Describing stage 1 sampling units
+
+Sampling weights: <none>
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+        Weight 1: GeneralSampleWeightWeight
+
+                                    Number of obs per unit
+ Stratum   # units     # obs       Min      Mean       Max
+----------------------------------------------------------
+       1     7,197     7,197         1       1.0         1
+----------------------------------------------------------
+       1     7,197     7,197         1       1.0         1
 
 . 
 . ***--------------------------***
@@ -67,17 +86,18 @@ Number of PSUs   = 7,197                              Population size =  7,197
 
 . 
 . *Adding controls
-. svy: reg mean_info disability male  ///  
->         mean_cbo new_disaster_experience i.insurance_ownership  /// 
->         c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
+. svy: reg mean_info disability   ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment 
 (running regress on estimation sample)
 
 Survey: Linear regression
 
-Number of strata =     1                          Number of obs   =      6,202
-Number of PSUs   = 6,202                          Population size = 6,104.9259
-                                                  Design df       =      6,201
-                                                  F(26, 6176)     =       7.40
+Number of strata =     1                          Number of obs   =      6,207
+Number of PSUs   = 6,207                          Population size = 6,108.1449
+                                                  Design df       =      6,206
+                                                  F(26, 6181)     =       7.42
                                                   Prob > F        =     0.0000
                                                   R-squared       =     0.0740
 
@@ -85,47 +105,48 @@ Number of PSUs   = 6,202                          Population size = 6,104.9259
               |             Linearized
     mean_info | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 --------------+----------------------------------------------------------------
-   disability |   -.045341   .0148324    -3.06   0.002    -.0744176   -.0162645
-         male |  -.0145025   .0113866    -1.27   0.203    -.0368241    .0078191
-     mean_cbo |  -.0098471   .0056783    -1.73   0.083    -.0209785    .0012842
-new_disaste~e |   .0984605   .0110694     8.89   0.000     .0767605    .1201604
+   disability |  -.0464452   .0148385    -3.13   0.002    -.0755337   -.0173566
+new_disaste~e |   .0982611   .0110683     8.88   0.000     .0765635    .1199588
               |
 insurance_o~p |
-Renter wit..  |  -.0417364   .0191006    -2.19   0.029    -.0791802   -.0042927
-Owner with..  |   .0130985   .0157418     0.83   0.405    -.0177608    .0439578
-Owner with..  |  -.0758881   .0219532    -3.46   0.001     -.118924   -.0328521
+Renter wit..  |  -.0126668    .015734    -0.81   0.421    -.0435108    .0181773
+Renter wit..  |  -.0543393   .0170109    -3.19   0.001    -.0876865    -.020992
+Owner with..  |  -.0887586   .0194565    -4.56   0.000    -.1269001   -.0506171
               |
-  income_redi |   2.86e-08   7.88e-08     0.36   0.716    -1.26e-07    1.83e-07
-              |
-    education |
-High schoo..  |   .0257578   .0267515     0.96   0.336    -.0266844    .0782001
-Some colle..  |   .0759673   .0273453     2.78   0.005      .022361    .1295736
-Associate'..  |   .0611338   .0307572     1.99   0.047     .0008391    .1214285
-Bachelor's..  |   .0521467   .0281084     1.86   0.064    -.0029555    .1072489
-Post gradu..  |   .0532887   .0297606     1.79   0.073    -.0050524    .1116299
+     mean_cbo |  -.0097679    .005676    -1.72   0.085    -.0208949     .001359
+     woman_nb |   .0141521   .0113849     1.24   0.214    -.0081662    .0364704
               |
 race_ethnic~y |
-Black or A..  |   -.034817   .0192627    -1.81   0.071    -.0725786    .0029446
-       Asian  |  -.0504148   .0265441    -1.90   0.058    -.1024503    .0016208
-Hispanic/L~o  |  -.0352748   .0166289    -2.12   0.034    -.0678732   -.0026764
-       Other  |  -.0163063   .0263289    -0.62   0.536    -.0679201    .0353076
-    Multiple  |   .0059508   .0328524     0.18   0.856    -.0584512    .0703529
+Black or A..  |  -.0351033   .0192538    -1.82   0.068    -.0728474    .0026408
+       Asian  |  -.0505721   .0265459    -1.91   0.057    -.1026112     .001467
+Hispanic/L~o  |  -.0354364   .0166299    -2.13   0.033    -.0680367    -.002836
+       Other  |  -.0192803   .0262968    -0.73   0.463    -.0708311    .0322704
+    Multiple  |    .005914   .0328642     0.18   0.857    -.0585113    .0703393
               |
           age |
-       30-39  |   -.005713   .0176138    -0.32   0.746    -.0402421    .0288162
-       40-49  |  -.0326012    .019624    -1.66   0.097     -.071071    .0058686
-       50-59  |   -.040692   .0202689    -2.01   0.045     -.080426    -.000958
-       60-69  |  -.0363748   .0225712    -1.61   0.107    -.0806221    .0078725
-       70-79  |  -.0761303   .0285593    -2.67   0.008    -.1321164   -.0201441
-     Over 80  |  -.1027633   .0368888    -2.79   0.005    -.1750781   -.0304485
+       30-39  |  -.0059604   .0176111    -0.34   0.735    -.0404842    .0285635
+       40-49  |  -.0327819   .0196252    -1.67   0.095    -.0712542    .0056903
+       50-59  |  -.0409382   .0202679    -2.02   0.043    -.0806702   -.0012061
+       60-69  |  -.0379498   .0225585    -1.68   0.093    -.0821723    .0062727
+       70-79  |  -.0772596     .02854    -2.71   0.007    -.1332078   -.0213113
+     Over 80  |  -.1037219   .0368882    -2.81   0.005    -.1760356   -.0314082
+              |
+    education |
+High schoo..  |   .0247853   .0267514     0.93   0.354    -.0276566    .0772272
+Some colle..  |   .0755066   .0273493     2.76   0.006     .0218925    .1291207
+Associate'..  |   .0606227   .0307464     1.97   0.049      .000349    .1208964
+Bachelor's..  |   .0514407   .0281094     1.83   0.067    -.0036634    .1065448
+Post gradu..  |   .0524676   .0297578     1.76   0.078    -.0058679    .1108032
+              |
+  income_redi |   3.01e-08   7.89e-08     0.38   0.702    -1.24e-07    1.85e-07
               |
 simple_empl~t |
-  Unemployed  |  -.0300629   .0146048    -2.06   0.040    -.0586935   -.0014324
-     Retired  |   -.015496   .0205273    -0.75   0.450    -.0557366    .0247446
+  Unemployed  |  -.0304619   .0146058    -2.09   0.037    -.0590944   -.0018295
+     Retired  |   -.014537   .0205201    -0.71   0.479    -.0547635    .0256896
     Employed  |          0  (omitted)
            3  |          0  (empty)
               |
-        _cons |   .3696018   .0323017    11.44   0.000     .3062792    .4329243
+        _cons |   .3693807   .0338564    10.91   0.000     .3030106    .4357509
 -------------------------------------------------------------------------------
 
 . estimates store info_model_controls
@@ -139,130 +160,128 @@ simple_empl~t |
 ------------------------------------------------------------------------
                                                     mean_info  mean_info
 ------------------------------------------------------------------------
-disability                                          -0.054 **  -0.045 **
+Disability                                          -0.054 **  -0.046 **
                                                    (0.013)    (0.015)   
-male                                                           -0.015   
+Disaster Experience                                             0.098 **
                                                               (0.011)   
-mean_cbo                                                       -0.010   
-                                                              (0.006)   
-new_disaster_experience                                         0.098 **
-                                                              (0.011)   
-insurance_ownership                                                     
-  Renter without insurance                                     -0.042 * 
-                                                              (0.019)   
-  Owner with insurance                                          0.013   
+Rent / Own Home & Insurance                                             
+  Renter with insurance                                        -0.013   
                                                               (0.016)   
-  Owner without insurance                                      -0.076 **
-                                                              (0.022)   
-REDI continuous income income                                   0.000   
-                                                              (0.000)   
-education                                                               
-  High school degree or diploma                                 0.026   
-                                                              (0.027)   
-  Some college, no degree                                       0.076 **
-                                                              (0.027)   
-  Associate's degree                                            0.061 * 
-                                                              (0.031)   
-  Bachelor's degree                                             0.052   
-                                                              (0.028)   
-  Post graduate work/degree or professional degree              0.053   
-                                                              (0.030)   
-race_ethnicity                                                          
+  Renter without insurance                                     -0.054 **
+                                                              (0.017)   
+  Owner without insurance                                      -0.089 **
+                                                              (0.019)   
+Mean Community Involvement                                     -0.010   
+                                                              (0.006)   
+Woman/non-binary/other                                          0.014   
+                                                              (0.011)   
+Race / Ethnicity                                                        
   Black or African American                                    -0.035   
                                                               (0.019)   
-  Asian                                                        -0.050   
+  Asian                                                        -0.051   
                                                               (0.027)   
   Hispanic/Latino                                              -0.035 * 
                                                               (0.017)   
-  Other                                                        -0.016   
+  Other                                                        -0.019   
                                                               (0.026)   
   Multiple                                                      0.006   
                                                               (0.033)   
-age                                                                     
+Age                                                                     
   30-39                                                        -0.006   
                                                               (0.018)   
   40-49                                                        -0.033   
                                                               (0.020)   
   50-59                                                        -0.041 * 
                                                               (0.020)   
-  60-69                                                        -0.036   
+  60-69                                                        -0.038   
                                                               (0.023)   
-  70-79                                                        -0.076 **
+  70-79                                                        -0.077 **
                                                               (0.029)   
-  Over 80                                                      -0.103 **
+  Over 80                                                      -0.104 **
                                                               (0.037)   
-simple_employment                                                       
+Education level                                                         
+  High school degree or diploma                                 0.025   
+                                                              (0.027)   
+  Some college, no degree                                       0.076 **
+                                                              (0.027)   
+  Associate's degree                                            0.061 * 
+                                                              (0.031)   
+  Bachelor's degree                                             0.051   
+                                                              (0.028)   
+  Post graduate work/degree or professional degree              0.052   
+                                                              (0.030)   
+REDI continuous income income                                   0.000   
+                                                              (0.000)   
+Employment Status                                                       
   Unemployed                                                   -0.030 * 
                                                               (0.015)   
   Retired                                                      -0.015   
                                                               (0.021)   
-Intercept                                            0.385 **   0.370 **
-                                                   (0.006)    (0.032)   
-Number of observations                                7197       6202   
+Intercept                                            0.385 **   0.369 **
+                                                   (0.006)    (0.034)   
+Number of observations                                7197       6207   
 R-squared                                             0.00       0.07   
 ------------------------------------------------------------------------
 (collection ETable exported to file
- /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_re
- > sponse/results/disd04_info_regression.docx)
+ ~/Documents/SocResearch/climate_disability/disability_disaster_response/resul
+ > ts/disd04_info_regression.docx)
 
-.         
 . 
 . // VISUALIZE: Predicted information by disability status 
 . quietly: ///
-> svy: reg mean_info i.disability male  ///  
->         mean_cbo new_disaster_experience i.insurance_ownership  /// 
->         c.income_redi i.education i.race_ethnicity i.age ib3.simple_employment
+> svy: reg mean_info i.disability woman_nb  ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment 
 
 . 
 . margins disability, atmeans
 
 Adjusted predictions
 
-Number of strata =     1                          Number of obs   =      6,202
-Number of PSUs   = 6,202                          Population size = 6,104.9259
-Model VCE: Linearized                             Design df       =      6,201
+Number of strata =     1                          Number of obs   =      6,207
+Number of PSUs   = 6,207                          Population size = 6,108.1449
+Model VCE: Linearized                             Design df       =      6,206
 
 Expression: Linear prediction, predict()
-At: 0.disability            = .8534834 (mean)
-    1.disability            = .1465166 (mean)
-    male                    = .5020664 (mean)
-    mean_cbo                = .9192519 (mean)
-    new_disaster_experience = .5510544 (mean)
-    1.insurance_ownership   = .1499961 (mean)
-    2.insurance_ownership   = .1701495 (mean)
-    3.insurance_ownership   = .6006903 (mean)
-    4.insurance_ownership   = .0791641 (mean)
-    income_redi             = 83821.04 (mean)
-    0.education             = .0971134 (mean)
-    1.education             = .2724519 (mean)
-    2.education             = .2283565 (mean)
-    3.education             = .0835775 (mean)
-    4.education             = .2000432 (mean)
-    5.education             = .1184574 (mean)
-    0.race_ethnicity        = .6711314 (mean)
-    1.race_ethnicity        = .0966209 (mean)
-    2.race_ethnicity        = .0479094 (mean)
-    3.race_ethnicity        = .1157311 (mean)
-    4.race_ethnicity        = .0488395 (mean)
-    5.race_ethnicity        = .0197677 (mean)
-    0.age                   = .1751378 (mean)
-    1.age                   = .1715072 (mean)
-    2.age                   = .1704918 (mean)
-    3.age                   = .1814072 (mean)
-    4.age                   = .1619101 (mean)
-    5.age                   = .0933208 (mean)
-    6.age                   = .0462251 (mean)
-    0.simple_employment     = .2529455 (mean)
-    1.simple_employment     = .2386998 (mean)
-    2.simple_employment     = .5083547 (mean)
+At: woman_nb                = .4981982 (mean)
+    new_disaster_experience = .5511587 (mean)
+    1.insurance_ownership   = .1500206 (mean)
+    2.insurance_ownership   = .1701298 (mean)
+    3.insurance_ownership   = .6007272 (mean)
+    4.insurance_ownership   = .0791224 (mean)
+    mean_cbo                = .9191026 (mean)
+    0.race_ethnicity        =   .67091 (mean)
+    1.race_ethnicity        = .0966096 (mean)
+    2.race_ethnicity        = .0478842 (mean)
+    3.race_ethnicity        = .1156701 (mean)
+    4.race_ethnicity        = .0491689 (mean)
+    5.race_ethnicity        = .0197573 (mean)
+    0.age                   = .1750471 (mean)
+    1.age                   = .1714564 (mean)
+    2.age                   =  .170402 (mean)
+    3.age                   = .1813116 (mean)
+    4.age                   = .1621783 (mean)
+    5.age                   = .0934039 (mean)
+    6.age                   = .0462007 (mean)
+    0.education             = .0970623 (mean)
+    1.education             = .2726618 (mean)
+    2.education             = .2282378 (mean)
+    3.education             =  .083637 (mean)
+    4.education             = .1999666 (mean)
+    5.education             = .1184346 (mean)
+    income_redi             = 83791.89 (mean)
+    0.simple_employment     = .2531673 (mean)
+    1.simple_employment     = .2387063 (mean)
+    2.simple_employment     = .5081264 (mean)
 
 -------------------------------------------------------------------------------
               |            Delta-method
               |     Margin   std. err.      t    P>|t|     [95% conf. interval]
 --------------+----------------------------------------------------------------
    disability |
-No Disabil..  |   .3973965   .0062246    63.84   0.000     .3851942    .4095988
-  Disability  |   .3520555   .0126959    27.73   0.000     .3271671    .3769439
+No Disabil..  |   .3974118   .0062248    63.84   0.000     .3852091    .4096146
+  Disability  |   .3509666   .0127011    27.63   0.000     .3260681    .3758652
 -------------------------------------------------------------------------------
 
 . marginsplot, xtitle("Disability Status") ytitle("Linear Prediction") ///
@@ -273,8 +292,8 @@ Variables that uniquely identify margins: disability
 
 . graph export $results/disd04_info_margins_plot.pdf, replace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd04_info_margins_plot.pdf saved as PDF format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd04_info_margins_plot.pdf saved as PDF format
 
 . 
 . ***--------------------------***
@@ -282,83 +301,106 @@ file
 . ***--------------------------***
 . 
 . *Base model: Disability only
-. quietly: svy: ologit confidence_prep disability, ///
->           or
-
-. estimates store conf_model_dis
-
-. 
-. *Adding gender
-. quietly: svy: ologit confidence_prep disability male, ///
->         or
-
-. estimates store conf_model_male
-
-. 
-. *Adding controls
-. svy: ologit confidence_prep disability male  ///  
->          mean_cbo new_disaster_experience i.insurance_ownership ///
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t, ///
+. svy: ologit confidence_prep disability, ///
 >           or
 (running ologit on estimation sample)
 
 Survey: Ordered logistic regression
 
-Number of strata =     1                          Number of obs   =      6,133
-Number of PSUs   = 6,133                          Population size = 6,025.1328
-                                                  Design df       =      6,132
-                                                  F(26, 6107)     =       7.84
+Number of strata =     1                          Number of obs   =      7,011
+Number of PSUs   = 7,011                          Population size = 6,986.0654
+                                                  Design df       =      7,010
+                                                  F(1, 7010)      =       1.71
+                                                  Prob > F        =     0.1907
+
+-------------------------------------------------------------------------------
+              |             Linearized
+confidence_~p | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+   disability |   .8742806   .0897621    -1.31   0.191     .7148964    1.069199
+--------------+----------------------------------------------------------------
+        /cut1 |  -3.453253   .1172512                     -3.683101   -3.223406
+        /cut2 |  -1.704765   .0559103                     -1.814366   -1.595164
+        /cut3 |  -.2489535   .0417532                     -.3308024   -.1671047
+        /cut4 |   1.178773   .0472928                      1.086065    1.271481
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation to odds ratios.
+
+. estimates store conf_model_dis
+
+. 
+. *Adding gender
+. quietly: svy: ologit confidence_prep disability woman_nb, ///
+>         or
+
+. estimates store conf_model_gender
+
+. 
+. *Adding controls
+. svy: ologit confidence_prep disability  ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment, ///
+>         or
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata =     1                          Number of obs   =      6,138
+Number of PSUs   = 6,138                          Population size = 6,028.3518
+                                                  Design df       =      6,137
+                                                  F(26, 6112)     =       7.85
                                                   Prob > F        =     0.0000
 
 -------------------------------------------------------------------------------
               |             Linearized
 confidence_~p | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
 --------------+----------------------------------------------------------------
-   disability |   .7159353     .08528    -2.81   0.005      .566841    .9042453
-         male |   1.231383   .0975196     2.63   0.009     1.054311    1.438194
-     mean_cbo |    1.25564   .0539627     5.30   0.000     1.154188     1.36601
-new_disaste~e |   1.800739   .1430025     7.41   0.000     1.541136    2.104073
+   disability |    .721761   .0859996    -2.74   0.006     .5714137     .911667
+new_disaste~e |   1.801988   .1429988     7.42   0.000     1.542376    2.105296
               |
 insurance_o~p |
-Renter wit..  |   .7589624   .1092716    -1.92   0.055     .5723271    1.006459
-Owner with..  |   1.059195   .1215549     0.50   0.616     .8458073    1.326418
-Owner with..  |   .7209638   .1316991    -1.79   0.073     .5039565    1.031416
+Renter wit..  |   .9417771   .1079611    -0.52   0.601     .7522305    1.179086
+Renter wit..  |   .7132282   .0807628    -2.98   0.003     .5712461    .8904997
+Owner with..  |   .6793805   .1106123    -2.37   0.018     .4937404    .9348188
               |
-  income_redi |          1   6.74e-07     0.23   0.817     .9999988    1.000001
-              |
-    education |
-High schoo..  |     .97924   .1959808    -0.10   0.917     .6614541    1.449701
-Some colle..  |   1.200358   .2439208     0.90   0.369     .8059472    1.787783
-Associate'..  |   1.227325   .2761833     0.91   0.363     .7895449    1.907841
-Bachelor's..  |   .9467776   .1941922    -0.27   0.790     .6333223    1.415374
-Post gradu..  |   1.236875   .2735565     0.96   0.336     .8017343    1.908187
+     mean_cbo |   1.255388   .0539264     5.29   0.000     1.154002    1.365681
+     woman_nb |   .8139229   .0644311    -2.60   0.009     .6969278    .9505582
               |
 race_ethnic~y |
-Black or A..  |   1.117639   .1595645     0.78   0.436     .8447963    1.478601
-       Asian  |   .6233169   .0992119    -2.97   0.003     .4562453    .8515682
-Hispanic/L~o  |   .8378791   .1028798    -1.44   0.150     .6586354    1.065903
-       Other  |   .8477722   .1859633    -0.75   0.452     .5514762    1.303262
-    Multiple  |   1.044804   .2797808     0.16   0.870     .6180909    1.766108
+Black or A..  |   1.117355   .1594213     0.78   0.437     .8447339    1.477959
+       Asian  |   .6240987   .0993487    -2.96   0.003     .4567997    .8526694
+Hispanic/L~o  |   .8386748   .1029653    -1.43   0.152     .6592797    1.066885
+       Other  |   .8669479   .1905356    -0.65   0.516     .5634834    1.333843
+    Multiple  |   1.044659   .2794332     0.16   0.870     .6183634    1.764839
               |
           age |
-       30-39  |   1.149435   .1498369     1.07   0.285     .8902309    1.484111
-       40-49  |   1.406517   .1944425     2.47   0.014     1.072626    1.844343
-       50-59  |   1.436911   .1910083     2.73   0.006      1.10728    1.864672
-       60-69  |   1.543106   .2439371     2.74   0.006     1.131904     2.10369
-       70-79  |   1.259181   .2560701     1.13   0.257     .8451844    1.875965
-     Over 80  |   .8361294    .217543    -0.69   0.492     .5020712    1.392457
+       30-39  |   1.150175   .1498922     1.07   0.283     .8908663    1.484963
+       40-49  |   1.408471   .1945814     2.48   0.013     1.074312    1.846568
+       50-59  |   1.439343   .1913679     2.74   0.006     1.109099    1.867919
+       60-69  |   1.560558   .2469479     2.81   0.005     1.144343    2.128156
+       70-79  |   1.270505   .2581789     1.18   0.239     .8530412    1.892269
+     Over 80  |   .8424342   .2192241    -0.66   0.510     .5058091    1.403089
+              |
+    education |
+High schoo..  |   .9862662   .1973792    -0.07   0.945     .6662106     1.46008
+Some colle..  |   1.204003   .2445774     0.91   0.361     .8085059    1.792967
+Associate'..  |   1.232711   .2772664     0.93   0.352     .7931729     1.91582
+Bachelor's..  |   .9511401   .1950227    -0.24   0.807     .6363248    1.421707
+Post gradu..  |   1.241211   .2744598     0.98   0.328     .8046155    1.914708
+              |
+  income_redi |          1   6.73e-07     0.22   0.829     .9999988    1.000001
               |
 simple_empl~t |
-  Unemployed  |   .8284334   .0865072    -1.80   0.072     .6750802    1.016623
-     Retired  |      .9313   .1357804    -0.49   0.625      .699782    1.239414
+  Unemployed  |   .8311625   .0867866    -1.77   0.077      .677313    1.019958
+     Retired  |   .9244408   .1347684    -0.54   0.590     .6946456    1.230254
     Employed  |          1  (omitted)
            3  |          1  (empty)
 --------------+----------------------------------------------------------------
-        /cut1 |  -3.053281    .274533                     -3.591462     -2.5151
-        /cut2 |  -1.100697   .2457556                     -1.582464   -.6189298
-        /cut3 |   .4301462    .243132                     -.0464779    .9067702
-        /cut4 |   1.967247   .2464596                        1.4841    2.450394
+        /cut1 |  -3.310659    .271133                     -3.842174   -2.779143
+        /cut2 |  -1.358044   .2423006                     -1.833038     -.88305
+        /cut3 |   .1722574   .2383795                       -.29505    .6395648
+        /cut4 |   1.708455   .2405491                      1.236895    2.180016
 -------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation to odds ratios.
 
@@ -367,102 +409,99 @@ Note: Estimates are transformed only in the first equation to odds ratios.
 . 
 . * Put in table
 . etable, showstars ///
->         estimates(conf_model_dis conf_model_male  conf_model_controls) /// con
-> f_model_interact
+>         estimates(conf_model_dis  conf_model_controls) /// 
 >         mstat(N) mstat(r2_a) ///
 >         export("$results/disd04_conf_nested_model.docx", as(docx) replace)
 
---------------------------------------------------------------------------------------------------
-                                                   confidence_prep confidence_prep confidence_prep
---------------------------------------------------------------------------------------------------
-disability                                                   0.874      0.871           0.716 **  
-                                                           (0.090)    (0.089)         (0.085)     
-male                                                                    1.448 **        1.231 **  
-                                                                      (0.103)         (0.098)     
-mean_cbo                                                                                1.256 **  
-                                                                                      (0.054)     
-new_disaster_experience                                                                 1.801 **  
-                                                                                      (0.143)     
-insurance_ownership                                                                               
-  Renter without insurance                                                              0.759     
-                                                                                      (0.109)     
-  Owner with insurance                                                                  1.059     
-                                                                                      (0.122)     
-  Owner without insurance                                                               0.721     
-                                                                                      (0.132)     
-REDI continuous income income                                                           1.000     
-                                                                                      (0.000)     
-education                                                                                         
-  High school degree or diploma                                                         0.979     
-                                                                                      (0.196)     
-  Some college, no degree                                                               1.200     
-                                                                                      (0.244)     
-  Associate's degree                                                                    1.227     
-                                                                                      (0.276)     
-  Bachelor's degree                                                                     0.947     
-                                                                                      (0.194)     
-  Post graduate work/degree or professional degree                                      1.237     
-                                                                                      (0.274)     
-race_ethnicity                                                                                    
-  Black or African American                                                             1.118     
-                                                                                      (0.160)     
-  Asian                                                                                 0.623 **  
-                                                                                      (0.099)     
-  Hispanic/Latino                                                                       0.838     
-                                                                                      (0.103)     
-  Other                                                                                 0.848     
-                                                                                      (0.186)     
-  Multiple                                                                              1.045     
-                                                                                      (0.280)     
-age                                                                                               
-  30-39                                                                                 1.149     
-                                                                                      (0.150)     
-  40-49                                                                                 1.407 *   
-                                                                                      (0.194)     
-  50-59                                                                                 1.437 **  
-                                                                                      (0.191)     
-  60-69                                                                                 1.543 **  
-                                                                                      (0.244)     
-  70-79                                                                                 1.259     
-                                                                                      (0.256)     
-  Over 80                                                                               0.836     
-                                                                                      (0.218)     
-simple_employment                                                                                 
-  Unemployed                                                                            0.828     
-                                                                                      (0.087)     
-  Retired                                                                               0.931     
-                                                                                      (0.136)     
-cut1                                                        -3.453     -3.338          -3.053     
-                                                           (0.117)    (0.124)         (0.275)     
-cut2                                                        -1.705     -1.546          -1.101     
-                                                           (0.056)    (0.063)         (0.246)     
-cut3                                                        -0.249     -0.080           0.430     
-                                                           (0.042)    (0.053)         (0.243)     
-cut4                                                         1.179      1.363           1.967     
-                                                           (0.047)    (0.060)         (0.246)     
-Number of observations                                        7011       6935            6133     
---------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+                                                   confidence_prep confidence_prep
+----------------------------------------------------------------------------------
+Disability                                                   0.874      0.722 **  
+                                                           (0.090)    (0.086)     
+Disaster Experience                                                     1.802 **  
+                                                                      (0.143)     
+Rent / Own Home & Insurance                                                       
+  Renter with insurance                                                 0.942     
+                                                                      (0.108)     
+  Renter without insurance                                              0.713 **  
+                                                                      (0.081)     
+  Owner without insurance                                               0.679 *   
+                                                                      (0.111)     
+Mean Community Involvement                                              1.255 **  
+                                                                      (0.054)     
+Woman/non-binary/other                                                  0.814 **  
+                                                                      (0.064)     
+Race / Ethnicity                                                                  
+  Black or African American                                             1.117     
+                                                                      (0.159)     
+  Asian                                                                 0.624 **  
+                                                                      (0.099)     
+  Hispanic/Latino                                                       0.839     
+                                                                      (0.103)     
+  Other                                                                 0.867     
+                                                                      (0.191)     
+  Multiple                                                              1.045     
+                                                                      (0.279)     
+Age                                                                               
+  30-39                                                                 1.150     
+                                                                      (0.150)     
+  40-49                                                                 1.408 *   
+                                                                      (0.195)     
+  50-59                                                                 1.439 **  
+                                                                      (0.191)     
+  60-69                                                                 1.561 **  
+                                                                      (0.247)     
+  70-79                                                                 1.271     
+                                                                      (0.258)     
+  Over 80                                                               0.842     
+                                                                      (0.219)     
+Education level                                                                   
+  High school degree or diploma                                         0.986     
+                                                                      (0.197)     
+  Some college, no degree                                               1.204     
+                                                                      (0.245)     
+  Associate's degree                                                    1.233     
+                                                                      (0.277)     
+  Bachelor's degree                                                     0.951     
+                                                                      (0.195)     
+  Post graduate work/degree or professional degree                      1.241     
+                                                                      (0.274)     
+REDI continuous income income                                           1.000     
+                                                                      (0.000)     
+Employment Status                                                                 
+  Unemployed                                                            0.831     
+                                                                      (0.087)     
+  Retired                                                               0.924     
+                                                                      (0.135)     
+cut1                                                        -3.453     -3.311     
+                                                           (0.117)    (0.271)     
+cut2                                                        -1.705     -1.358     
+                                                           (0.056)    (0.242)     
+cut3                                                        -0.249      0.172     
+                                                           (0.042)    (0.238)     
+cut4                                                         1.179      1.708     
+                                                           (0.047)    (0.241)     
+Number of observations                                        7011       6138     
+----------------------------------------------------------------------------------
 (collection ETable exported to file
- /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_re
- > sponse/results/disd04_conf_nested_model.docx)
+ ~/Documents/SocResearch/climate_disability/disability_disaster_response/resul
+ > ts/disd04_conf_nested_model.docx)
 
 .         
 . 
-. // VISUALIZE: Conditional marginal effects of disability on confidence level
+. // VISUALIZE: Conditional marginal effects of disability on confidence level (
+> naive model)
 . quietly: ///
-> svy: ologit confidence_prep i.disability male  ///  
->          mean_cbo new_disaster_experience i.insurance_ownership ///
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t //
+> svy: ologit confidence_prep i.disability
 
 . 
 . margins r.disability, atmeans
 
 Contrasts of adjusted predictions
 
-Number of strata =     1                          Number of obs   =      6,133
-Number of PSUs   = 6,133                          Population size = 6,025.1328
-Model VCE: Linearized                             Design df       =      6,132
+Number of strata =     1                          Number of obs   =      7,011
+Number of PSUs   = 7,011                          Population size = 6,986.0654
+Model VCE: Linearized                             Design df       =      7,010
 
 1._predict: Pr(confidence_prep==0), predict(pr outcome(0))
 2._predict: Pr(confidence_prep==1), predict(pr outcome(1))
@@ -470,50 +509,18 @@ Model VCE: Linearized                             Design df       =      6,132
 4._predict: Pr(confidence_prep==3), predict(pr outcome(3))
 5._predict: Pr(confidence_prep==4), predict(pr outcome(4))
 
-At: 0.disability            =  .854808 (mean)
-    1.disability            =  .145192 (mean)
-    male                    = .5022036 (mean)
-    mean_cbo                = .9243016 (mean)
-    new_disaster_experience = .5542186 (mean)
-    1.insurance_ownership   =  .150257 (mean)
-    2.insurance_ownership   = .1688674 (mean)
-    3.insurance_ownership   = .6022603 (mean)
-    4.insurance_ownership   = .0786152 (mean)
-    income_redi             = 84213.47 (mean)
-    0.education             = .0960806 (mean)
-    1.education             = .2705764 (mean)
-    2.education             = .2283583 (mean)
-    3.education             = .0833939 (mean)
-    4.education             = .2019908 (mean)
-    5.education             = .1195999 (mean)
-    0.race_ethnicity        = .6699368 (mean)
-    1.race_ethnicity        =  .096871 (mean)
-    2.race_ethnicity        = .0475649 (mean)
-    3.race_ethnicity        = .1163141 (mean)
-    4.race_ethnicity        = .0494863 (mean)
-    5.race_ethnicity        =  .019827 (mean)
-    0.age                   = .1740796 (mean)
-    1.age                   = .1732498 (mean)
-    2.age                   = .1711099 (mean)
-    3.age                   = .1808939 (mean)
-    4.age                   = .1613461 (mean)
-    5.age                   = .0941431 (mean)
-    6.age                   = .0451775 (mean)
-    0.simple_employment     = .2511255 (mean)
-    1.simple_employment     = .2375417 (mean)
-    2.simple_employment     = .5113329 (mean)
 
 --------------------------------------------------------------------
                                  |         df           F        P>F
 ---------------------------------+----------------------------------
              disability@_predict |
-(Disability vs No Disability) 1  |          1        5.74     0.0166
-(Disability vs No Disability) 2  |          1        6.84     0.0089
-(Disability vs No Disability) 3  |          1        8.83     0.0030
-(Disability vs No Disability) 4  |          1        5.75     0.0166
-(Disability vs No Disability) 5  |          1        8.93     0.0028
-                          Joint  |          4        3.69     0.0053
-                          Design |       6132
+(Disability vs No Disability) 1  |          1        1.50     0.2206
+(Disability vs No Disability) 2  |          1        1.62     0.2028
+(Disability vs No Disability) 3  |          1        1.82     0.1769
+(Disability vs No Disability) 4  |          1        1.47     0.2255
+(Disability vs No Disability) 5  |          1        1.81     0.1787
+                          Joint  |          4        0.85     0.4903
+                          Design |       7010
 --------------------------------------------------------------------
 Note: F statistics are adjusted for the survey design.
 
@@ -525,23 +532,23 @@ disability@_predict |
        (Disability  |
                 vs  |
     No Disability)  |
-                 1  |   .0079141   .0033025      .0014401    .0143881
+                 1  |   .0042565   .0034744     -.0025544    .0110674
        (Disability  |
                 vs  |
     No Disability)  |
-                 2  |   .0344161   .0131612      .0086155    .0602167
+                 2  |   .0140573   .0110353     -.0075752    .0356899
        (Disability  |
                 vs  |
     No Disability)  |
-                 3  |   .0400715   .0134886      .0136292    .0665139
+                 3  |   .0149865    .011098     -.0067691     .036742
        (Disability  |
                 vs  |
     No Disability)  |
-                 4  |  -.0268849   .0112164      -.048873   -.0048967
+                 4  |  -.0099915   .0082437     -.0261516    .0061686
        (Disability  |
                 vs  |
     No Disability)  |
-                 5  |  -.0555169   .0185737     -.0919279   -.0191058
+                 5  |  -.0233088    .017333     -.0572868    .0106691
 ---------------------------------------------------------------------
 
 . marginsplot
@@ -553,9 +560,9 @@ Variables that uniquely identify margins:
 
 Conditional marginal effects
 
-Number of strata =     1                          Number of obs   =      6,133
-Number of PSUs   = 6,133                          Population size = 6,025.1328
-Model VCE: Linearized                             Design df       =      6,132
+Number of strata =     1                          Number of obs   =      7,011
+Number of PSUs   = 7,011                          Population size = 6,986.0654
+Model VCE: Linearized                             Design df       =      7,010
 
 dy/dx wrt: 1.disability
 
@@ -565,38 +572,8 @@ dy/dx wrt: 1.disability
 4._predict: Pr(confidence_prep==3), predict(pr outcome(3))
 5._predict: Pr(confidence_prep==4), predict(pr outcome(4))
 
-At: 0.disability            =  .854808 (mean)
-    1.disability            =  .145192 (mean)
-    male                    = .5022036 (mean)
-    mean_cbo                = .9243016 (mean)
-    new_disaster_experience = .5542186 (mean)
-    1.insurance_ownership   =  .150257 (mean)
-    2.insurance_ownership   = .1688674 (mean)
-    3.insurance_ownership   = .6022603 (mean)
-    4.insurance_ownership   = .0786152 (mean)
-    income_redi             = 84213.47 (mean)
-    0.education             = .0960806 (mean)
-    1.education             = .2705764 (mean)
-    2.education             = .2283583 (mean)
-    3.education             = .0833939 (mean)
-    4.education             = .2019908 (mean)
-    5.education             = .1195999 (mean)
-    0.race_ethnicity        = .6699368 (mean)
-    1.race_ethnicity        =  .096871 (mean)
-    2.race_ethnicity        = .0475649 (mean)
-    3.race_ethnicity        = .1163141 (mean)
-    4.race_ethnicity        = .0494863 (mean)
-    5.race_ethnicity        =  .019827 (mean)
-    0.age                   = .1740796 (mean)
-    1.age                   = .1732498 (mean)
-    2.age                   = .1711099 (mean)
-    3.age                   = .1808939 (mean)
-    4.age                   = .1613461 (mean)
-    5.age                   = .0941431 (mean)
-    6.age                   = .0451775 (mean)
-    0.simple_employment     = .2511255 (mean)
-    1.simple_employment     = .2375417 (mean)
-    2.simple_employment     = .5113329 (mean)
+At: 0.disability = .854015 (mean)
+    1.disability = .145985 (mean)
 
 -------------------------------------------------------------------------------
               |            Delta-method
@@ -606,11 +583,196 @@ At: 0.disability            =  .854808 (mean)
 --------------+----------------------------------------------------------------
 1.disability  |
      _predict |
-           1  |   .0079141   .0033025     2.40   0.017     .0014401    .0143881
-           2  |   .0344161   .0131612     2.61   0.009     .0086155    .0602167
-           3  |   .0400715   .0134886     2.97   0.003     .0136292    .0665139
-           4  |  -.0268849   .0112164    -2.40   0.017     -.048873   -.0048967
-           5  |  -.0555169   .0185737    -2.99   0.003    -.0919279   -.0191058
+           1  |   .0042565   .0034744     1.23   0.221    -.0025544    .0110674
+           2  |   .0140573   .0110353     1.27   0.203    -.0075752    .0356899
+           3  |   .0149865    .011098     1.35   0.177    -.0067691     .036742
+           4  |  -.0099915   .0082437    -1.21   0.226    -.0261516    .0061686
+           5  |  -.0233088    .017333    -1.34   0.179    -.0572868    .0106691
+-------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+. marginsplot, yline(0) ///
+>         title("Conditional Marginal Effects of Disability") ///
+>         xtitle("Confidence") ytitle("Effects on probability") ///
+>         xlabel(0 `""Not at all" "confident""' ///
+>         1 "Slightly confident" ///
+>         2 "Somewhat confident" ///
+>         3 "Moderately confident" ///
+>         4 "Extremely confident",  ///
+>         labsize(vsmall)) graphregion(margin(r+10))
+
+Variables that uniquely identify margins:
+
+. graph export $results/disd04_confidence_marginaleffects_naivemodel_plot.jpg, r
+> eplace
+file
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd04_confidence_marginaleffects_naivemodel_plot.jpg saved as JPG
+    format
+
+.         
+. // VISUALIZE: Conditional marginal effects of disability on confidence level w
+> ith controls
+. quietly: ///
+> svy: ologit confidence_prep i.disability ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment 
+
+. 
+. margins r.disability, atmeans
+
+Contrasts of adjusted predictions
+
+Number of strata =     1                          Number of obs   =      6,138
+Number of PSUs   = 6,138                          Population size = 6,028.3518
+Model VCE: Linearized                             Design df       =      6,137
+
+1._predict: Pr(confidence_prep==0), predict(pr outcome(0))
+2._predict: Pr(confidence_prep==1), predict(pr outcome(1))
+3._predict: Pr(confidence_prep==2), predict(pr outcome(2))
+4._predict: Pr(confidence_prep==3), predict(pr outcome(3))
+5._predict: Pr(confidence_prep==4), predict(pr outcome(4))
+
+At: new_disaster_experience = .5543226 (mean)
+    1.insurance_ownership   = .1502817 (mean)
+    2.insurance_ownership   = .1688481 (mean)
+    3.insurance_ownership   = .6022969 (mean)
+    4.insurance_ownership   = .0785733 (mean)
+    mean_cbo                = .9241476 (mean)
+    woman_nb                = .4980646 (mean)
+    0.race_ethnicity        = .6697131 (mean)
+    1.race_ethnicity        = .0968594 (mean)
+    2.race_ethnicity        = .0475395 (mean)
+    3.race_ethnicity        =  .116252 (mean)
+    4.race_ethnicity        = .0498197 (mean)
+    5.race_ethnicity        = .0198164 (mean)
+    0.age                   = .1739883 (mean)
+    1.age                   = .1731974 (mean)
+    2.age                   = .1710186 (mean)
+    3.age                   = .1807974 (mean)
+    4.age                   = .1616181 (mean)
+    5.age                   = .0942269 (mean)
+    6.age                   = .0451534 (mean)
+    0.education             = .0960293 (mean)
+    1.education             = .2707901 (mean)
+    2.education             =  .228238 (mean)
+    3.education             = .0834543 (mean)
+    4.education             = .2019121 (mean)
+    5.education             = .1195761 (mean)
+    income_redi             = 84183.72 (mean)
+    0.simple_employment     = .2513512 (mean)
+    1.simple_employment     = .2375489 (mean)
+    2.simple_employment     =    .5111 (mean)
+
+--------------------------------------------------------------------
+                                 |         df           F        P>F
+---------------------------------+----------------------------------
+             disability@_predict |
+(Disability vs No Disability) 1  |          1        5.51     0.0189
+(Disability vs No Disability) 2  |          1        6.53     0.0107
+(Disability vs No Disability) 3  |          1        8.37     0.0038
+(Disability vs No Disability) 4  |          1        5.49     0.0192
+(Disability vs No Disability) 5  |          1        8.47     0.0036
+                          Joint  |          4        3.52     0.0071
+                          Design |       6137
+--------------------------------------------------------------------
+Note: F statistics are adjusted for the survey design.
+
+---------------------------------------------------------------------
+                    |            Delta-method
+                    |   Contrast   std. err.     [95% conf. interval]
+--------------------+------------------------------------------------
+disability@_predict |
+       (Disability  |
+                vs  |
+    No Disability)  |
+                 1  |   .0076976    .003278      .0012716    .0141237
+       (Disability  |
+                vs  |
+    No Disability)  |
+                 2  |   .0335137   .0131183      .0077972    .0592301
+       (Disability  |
+                vs  |
+    No Disability)  |
+                 3  |   .0391691   .0135419      .0126222     .065716
+       (Disability  |
+                vs  |
+    No Disability)  |
+                 4  |  -.0260675    .011128     -.0478823   -.0042527
+       (Disability  |
+                vs  |
+    No Disability)  |
+                 5  |  -.0543129   .0186578     -.0908888    -.017737
+---------------------------------------------------------------------
+
+. marginsplot
+
+Variables that uniquely identify margins:
+
+. 
+. margins, dydx(disability) atmeans
+
+Conditional marginal effects
+
+Number of strata =     1                          Number of obs   =      6,138
+Number of PSUs   = 6,138                          Population size = 6,028.3518
+Model VCE: Linearized                             Design df       =      6,137
+
+dy/dx wrt: 1.disability
+
+1._predict: Pr(confidence_prep==0), predict(pr outcome(0))
+2._predict: Pr(confidence_prep==1), predict(pr outcome(1))
+3._predict: Pr(confidence_prep==2), predict(pr outcome(2))
+4._predict: Pr(confidence_prep==3), predict(pr outcome(3))
+5._predict: Pr(confidence_prep==4), predict(pr outcome(4))
+
+At: 0.disability            = .8544965 (mean)
+    1.disability            = .1455035 (mean)
+    new_disaster_experience = .5543226 (mean)
+    1.insurance_ownership   = .1502817 (mean)
+    2.insurance_ownership   = .1688481 (mean)
+    3.insurance_ownership   = .6022969 (mean)
+    4.insurance_ownership   = .0785733 (mean)
+    mean_cbo                = .9241476 (mean)
+    woman_nb                = .4980646 (mean)
+    0.race_ethnicity        = .6697131 (mean)
+    1.race_ethnicity        = .0968594 (mean)
+    2.race_ethnicity        = .0475395 (mean)
+    3.race_ethnicity        =  .116252 (mean)
+    4.race_ethnicity        = .0498197 (mean)
+    5.race_ethnicity        = .0198164 (mean)
+    0.age                   = .1739883 (mean)
+    1.age                   = .1731974 (mean)
+    2.age                   = .1710186 (mean)
+    3.age                   = .1807974 (mean)
+    4.age                   = .1616181 (mean)
+    5.age                   = .0942269 (mean)
+    6.age                   = .0451534 (mean)
+    0.education             = .0960293 (mean)
+    1.education             = .2707901 (mean)
+    2.education             =  .228238 (mean)
+    3.education             = .0834543 (mean)
+    4.education             = .2019121 (mean)
+    5.education             = .1195761 (mean)
+    income_redi             = 84183.72 (mean)
+    0.simple_employment     = .2513512 (mean)
+    1.simple_employment     = .2375489 (mean)
+    2.simple_employment     =    .5111 (mean)
+
+-------------------------------------------------------------------------------
+              |            Delta-method
+              |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+0.disability  |  (base outcome)
+--------------+----------------------------------------------------------------
+1.disability  |
+     _predict |
+           1  |   .0076976    .003278     2.35   0.019     .0012716    .0141237
+           2  |   .0335137   .0131183     2.55   0.011     .0077972    .0592301
+           3  |   .0391691   .0135419     2.89   0.004     .0126222     .065716
+           4  |  -.0260675    .011128    -2.34   0.019    -.0478823   -.0042527
+           5  |  -.0543129   .0186578    -2.91   0.004    -.0908888    -.017737
 -------------------------------------------------------------------------------
 Note: dy/dx for factor levels is the discrete change from the base level.
 
@@ -628,9 +790,8 @@ Variables that uniquely identify margins:
 
 . graph export $results/disd04_confidence_marginaleffects_plot.jpg, replace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd04_confidence_marginaleffects_plot.jpg saved as
-    JPG format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd04_confidence_marginaleffects_plot.jpg saved as JPG format
 
 .         
 . ***--------------------------***
@@ -638,83 +799,106 @@ file
 . ***--------------------------***
 . 
 . *Base model: Disability only
-. quietly: svy: ologit preparedness_stage disability, ///
->           or
+. svy: ologit preparedness_stage disability, ///
+>         or
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata =     1                           Number of obs   =     6,810
+Number of PSUs   = 6,810                           Population size = 6,718.423
+                                                   Design df       =     6,809
+                                                   F(1, 6809)      =      1.40
+                                                   Prob > F        =    0.2367
+
+-------------------------------------------------------------------------------
+              |             Linearized
+preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+   disability |   .8869656   .0898951    -1.18   0.237      .727145    1.081913
+--------------+----------------------------------------------------------------
+        /cut1 |  -1.874313    .063365                     -1.998528   -1.750097
+        /cut2 |  -.7201324    .045021                     -.8083877   -.6318771
+        /cut3 |   .2174932   .0421345                      .1348964      .30009
+        /cut4 |   1.367524   .0495951                      1.270302    1.464746
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation to odds ratios.
 
 . estimates store prep_model_dis
 
 . 
 . *Adding gender
-. quietly: svy: ologit preparedness_stage disability male, ///
+. quietly: svy: ologit preparedness_stage disability woman_nb, ///
 >         or
 
-. estimates store prep_model_male
+. estimates store prep_model_gender
 
 . 
 . *Adding controls
-. svy: ologit preparedness_stage disability male  ///  
->          mean_cbo  new_disaster_experience i.insurance_ownership  /// 
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t, ///
->           or  
+. svy: ologit preparedness_stage disability  ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment , ///
+>         or  
 (running ologit on estimation sample)
 
 Survey: Ordered logistic regression
 
-Number of strata =     1                          Number of obs   =      5,986
-Number of PSUs   = 5,986                          Population size = 5,816.7226
-                                                  Design df       =      5,985
-                                                  F(26, 5960)     =      12.35
+Number of strata =     1                          Number of obs   =      5,991
+Number of PSUs   = 5,991                          Population size = 5,819.9416
+                                                  Design df       =      5,990
+                                                  F(26, 5965)     =      12.35
                                                   Prob > F        =     0.0000
 
 -------------------------------------------------------------------------------
               |             Linearized
 preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
 --------------+----------------------------------------------------------------
-   disability |   .7623588   .0850927    -2.43   0.015     .6125352    .9488287
-         male |   .8215456   .0671721    -2.40   0.016     .6998753    .9643676
-     mean_cbo |   1.343723   .0530895     7.48   0.000     1.243576    1.451934
-new_disaste~e |   2.267587   .1784736    10.40   0.000      1.94337    2.645894
+   disability |   .7686647   .0858455    -2.36   0.019     .6175248    .9567961
+new_disaste~e |   2.269486   .1785394    10.42   0.000     1.945138    2.647919
               |
 insurance_o~p |
-Renter wit..  |   .8636353   .1096531    -1.15   0.248     .6733396    1.107711
-Owner with..  |   1.288669   .1335152     2.45   0.014       1.0518    1.578882
-Owner with..  |   .8305895   .1457734    -1.06   0.290     .5887965    1.171676
+Renter wit..  |    .773607   .0800769    -2.48   0.013     .6315297    .9476479
+Renter wit..  |   .6673174   .0732535    -3.68   0.000     .5381143    .8275425
+Owner with..  |   .6435564   .1054692    -2.69   0.007     .4667231    .8873886
               |
-  income_redi |   1.000001   6.41e-07     0.80   0.424     .9999993    1.000002
-              |
-    education |
-High schoo..  |   1.622462   .3095681     2.54   0.011     1.116172    2.358402
-Some colle..  |   1.654563   .3228069     2.58   0.010     1.128703    2.425421
-Associate'..  |   1.668241   .3642917     2.34   0.019      1.08729      2.5596
-Bachelor's..  |    1.44548   .2962969     1.80   0.072     .9671551     2.16037
-Post gradu..  |   2.133563   .4809685     3.36   0.001     1.371452    3.319177
+     mean_cbo |   1.343137    .053046     7.47   0.000     1.243071    1.451258
+     woman_nb |   1.219401   .0996947     2.43   0.015     1.038821    1.431371
               |
 race_ethnic~y |
-Black or A..  |   1.156689   .1467675     1.15   0.251      .901964    1.483351
-       Asian  |    1.18913   .2268308     0.91   0.364     .8181385    1.728351
-Hispanic/L~o  |   1.105424    .122775     0.90   0.367     .8891403    1.374319
-       Other  |   1.280362   .2049832     1.54   0.123     .9354691     1.75241
-    Multiple  |    .856548   .1946521    -0.68   0.496     .5486249    1.337297
+Black or A..  |   1.156804   .1467807     1.15   0.251     .9020562    1.483495
+       Asian  |   1.190634   .2270298     0.92   0.360     .8192921    1.730287
+Hispanic/L~o  |   1.106806   .1228875     0.91   0.361     .8903165    1.375937
+       Other  |   1.304563   .2094581     1.66   0.098     .9522919    1.787145
+    Multiple  |   .8568789   .1946841    -0.68   0.497     .5488912    1.337681
               |
           age |
-       30-39  |    .979363   .1171771    -0.17   0.862     .7746046    1.238247
-       40-49  |   1.111023    .141255     0.83   0.408     .8659239    1.425497
-       50-59  |   1.220259   .1550483     1.57   0.117     .9512067    1.565413
-       60-69  |   1.112078   .1737009     0.68   0.496     .8187573    1.510482
-       70-79  |    1.14148   .2632755     0.57   0.566     .7262796    1.794041
-     Over 80  |   .7758143   .2445067    -0.81   0.421     .4182516    1.439057
+       30-39  |   .9799948   .1172424    -0.17   0.866     .7751203     1.23902
+       40-49  |   1.112636   .1413965     0.84   0.401     .8672779    1.427406
+       50-59  |   1.221912   .1552859     1.58   0.115     .9524528    1.567603
+       60-69  |   1.124354   .1757307     0.75   0.453     .8276326    1.527455
+       70-79  |   1.150261   .2650628     0.61   0.544     .7321635    1.807109
+     Over 80  |   .7808828   .2460992    -0.78   0.433     .4209894     1.44844
+              |
+    education |
+High schoo..  |   1.633419   .3116624     2.57   0.010     1.123705     2.37434
+Some colle..  |    1.65944   .3237274     2.60   0.009      1.13207    2.432481
+Associate'..  |   1.672808   .3650576     2.36   0.018     1.090562    2.565912
+Bachelor's..  |    1.45219   .2976159     1.82   0.069     .9717184    2.170232
+Post gradu..  |   2.140567   .4823912     3.38   0.001     1.376151    3.329596
+              |
+  income_redi |   1.000001   6.41e-07     0.78   0.433     .9999992    1.000002
               |
 simple_empl~t |
-  Unemployed  |   .7837684   .0760911    -2.51   0.012     .6479377    .9480741
-     Retired  |   1.364032   .2201524     1.92   0.054      .994064    1.871694
+  Unemployed  |   .7859098   .0763214    -2.48   0.013     .6496718    .9507174
+     Retired  |   1.354263   .2185302     1.88   0.060     .9870099    1.858167
     Employed  |          1  (omitted)
            3  |          1  (empty)
 --------------+----------------------------------------------------------------
-        /cut1 |   -.813019   .2339292                     -1.271605   -.3544335
-        /cut2 |   .4763241    .230338                      .0247787    .9278695
-        /cut3 |   1.524908   .2304964                      1.073052    1.976764
-        /cut4 |   2.788463   .2337566                      2.330216    3.246711
+        /cut1 |  -.8626268   .2359423                     -1.325159   -.4000951
+        /cut2 |   .4263803   .2307428                     -.0259587    .8787194
+        /cut3 |   1.474875   .2292048                      1.025551    1.924199
+        /cut4 |   2.737272   .2308991                      2.284627    3.189918
 -------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation to odds ratios.
 
@@ -722,102 +906,27 @@ Note: Estimates are transformed only in the first equation to odds ratios.
 
 . 
 . * Put in table
-. etable, showstars ///
->         estimates(prep_model_dis prep_model_male prep_model_controls) ///
+. *etable, showstars ///
+>         estimates(prep_model_dis prep_model_controls) ///
 >         mstat(N) mstat(r2_a) ///
 >         export("$results/disd04_prep_nested_model.docx", as(docx) replace)
-
------------------------------------------------------------------------------------------------------------
-                                                   preparedness_stage preparedness_stage preparedness_stage
------------------------------------------------------------------------------------------------------------
-disability                                                      0.887              0.873       0.762 *     
-                                                              (0.090)            (0.090)     (0.085)       
-male                                                                               1.105       0.822 *     
-                                                                                 (0.079)     (0.067)       
-mean_cbo                                                                                       1.344 **    
-                                                                                             (0.053)       
-new_disaster_experience                                                                        2.268 **    
-                                                                                             (0.178)       
-insurance_ownership                                                                                        
-  Renter without insurance                                                                     0.864       
-                                                                                             (0.110)       
-  Owner with insurance                                                                         1.289 *     
-                                                                                             (0.134)       
-  Owner without insurance                                                                      0.831       
-                                                                                             (0.146)       
-REDI continuous income income                                                                  1.000       
-                                                                                             (0.000)       
-education                                                                                                  
-  High school degree or diploma                                                                1.622 *     
-                                                                                             (0.310)       
-  Some college, no degree                                                                      1.655 **    
-                                                                                             (0.323)       
-  Associate's degree                                                                           1.668 *     
-                                                                                             (0.364)       
-  Bachelor's degree                                                                            1.445       
-                                                                                             (0.296)       
-  Post graduate work/degree or professional degree                                             2.134 **    
-                                                                                             (0.481)       
-race_ethnicity                                                                                             
-  Black or African American                                                                    1.157       
-                                                                                             (0.147)       
-  Asian                                                                                        1.189       
-                                                                                             (0.227)       
-  Hispanic/Latino                                                                              1.105       
-                                                                                             (0.123)       
-  Other                                                                                        1.280       
-                                                                                             (0.205)       
-  Multiple                                                                                     0.857       
-                                                                                             (0.195)       
-age                                                                                                        
-  30-39                                                                                        0.979       
-                                                                                             (0.117)       
-  40-49                                                                                        1.111       
-                                                                                             (0.141)       
-  50-59                                                                                        1.220       
-                                                                                             (0.155)       
-  60-69                                                                                        1.112       
-                                                                                             (0.174)       
-  70-79                                                                                        1.141       
-                                                                                             (0.263)       
-  Over 80                                                                                      0.776       
-                                                                                             (0.245)       
-simple_employment                                                                                          
-  Unemployed                                                                                   0.784 *     
-                                                                                             (0.076)       
-  Retired                                                                                      1.364       
-                                                                                             (0.220)       
-cut1                                                           -1.874             -1.832      -0.813       
-                                                              (0.063)            (0.069)     (0.234)       
-cut2                                                           -0.720             -0.682       0.476       
-                                                              (0.045)            (0.054)     (0.230)       
-cut3                                                            0.217              0.258       1.525       
-                                                              (0.042)            (0.053)     (0.230)       
-cut4                                                            1.368              1.414       2.788       
-                                                              (0.050)            (0.060)     (0.234)       
-Number of observations                                           6810               6729        5986       
------------------------------------------------------------------------------------------------------------
-(collection ETable exported to file
- /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_re
- > sponse/results/disd04_prep_nested_model.docx)
-
 . 
-. 
+.         
 . // VISUALIZE: Conditional marginal effects of disability on preparedness level
 . quietly: ///
-> svy: ologit preparedness_stage i.disability male  ///  
->          mean_cbo new_disaster_experience i.insurance_ownership  /// 
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t
+> svy: ologit preparedness_stage i.disability woman_nb  ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment 
 
 . 
 . margins r.disability, atmeans
 
 Contrasts of adjusted predictions
 
-Number of strata =     1                          Number of obs   =      5,986
-Number of PSUs   = 5,986                          Population size = 5,816.7226
-Model VCE: Linearized                             Design df       =      5,985
+Number of strata =     1                          Number of obs   =      5,991
+Number of PSUs   = 5,991                          Population size = 5,819.9416
+Model VCE: Linearized                             Design df       =      5,990
 
 1._predict: Pr(preparedness_stage==0), predict(pr outcome(0))
 2._predict: Pr(preparedness_stage==1), predict(pr outcome(1))
@@ -825,50 +934,48 @@ Model VCE: Linearized                             Design df       =      5,985
 4._predict: Pr(preparedness_stage==3), predict(pr outcome(3))
 5._predict: Pr(preparedness_stage==4), predict(pr outcome(4))
 
-At: 0.disability            = .8527153 (mean)
-    1.disability            = .1472847 (mean)
-    male                    = .5084904 (mean)
-    mean_cbo                = .9362677 (mean)
-    new_disaster_experience = .5541679 (mean)
-    1.insurance_ownership   = .1509992 (mean)
-    2.insurance_ownership   = .1688984 (mean)
-    3.insurance_ownership   = .6008282 (mean)
-    4.insurance_ownership   = .0792742 (mean)
-    income_redi             = 84627.17 (mean)
-    0.education             = .0979013 (mean)
-    1.education             = .2674311 (mean)
-    2.education             =  .225719 (mean)
-    3.education             =  .084063 (mean)
-    4.education             = .2031536 (mean)
-    5.education             = .1217321 (mean)
-    0.race_ethnicity        = .6658183 (mean)
-    1.race_ethnicity        = .0977118 (mean)
-    2.race_ethnicity        = .0463707 (mean)
-    3.race_ethnicity        = .1187924 (mean)
-    4.race_ethnicity        = .0507022 (mean)
-    5.race_ethnicity        = .0206046 (mean)
-    0.age                   = .1774371 (mean)
-    1.age                   = .1757914 (mean)
-    2.age                   = .1726473 (mean)
-    3.age                   = .1835007 (mean)
-    4.age                   =  .159228 (mean)
-    5.age                   = .0889125 (mean)
-    6.age                   =  .042483 (mean)
-    0.simple_employment     = .2523757 (mean)
-    1.simple_employment     = .2298339 (mean)
-    2.simple_employment     = .5177904 (mean)
+At: woman_nb                = .4917908 (mean)
+    new_disaster_experience = .5542756 (mean)
+    1.insurance_ownership   = .1510244 (mean)
+    2.insurance_ownership   = .1688784 (mean)
+    3.insurance_ownership   = .6008669 (mean)
+    4.insurance_ownership   = .0792304 (mean)
+    mean_cbo                = .9361016 (mean)
+    0.race_ethnicity        = .6655889 (mean)
+    1.race_ethnicity        = .0976993 (mean)
+    2.race_ethnicity        = .0463451 (mean)
+    3.race_ethnicity        = .1187267 (mean)
+    4.race_ethnicity        = .0510468 (mean)
+    5.race_ethnicity        = .0205932 (mean)
+    0.age                   = .1773406 (mean)
+    1.age                   = .1757357 (mean)
+    2.age                   = .1725518 (mean)
+    3.age                   = .1833992 (mean)
+    4.age                   =  .159511 (mean)
+    5.age                   = .0890022 (mean)
+    6.age                   = .0424595 (mean)
+    0.education             = .0978471 (mean)
+    1.education             = .2676541 (mean)
+    2.education             = .2255958 (mean)
+    3.education             = .0841251 (mean)
+    4.education             = .2030715 (mean)
+    5.education             = .1217063 (mean)
+    income_redi             = 84596.13 (mean)
+    0.simple_employment     = .2526088 (mean)
+    1.simple_employment     = .2298456 (mean)
+    2.simple_employment     = .5175456 (mean)
 
 --------------------------------------------------------------------
                                  |         df           F        P>F
 ---------------------------------+----------------------------------
              disability@_predict |
-(Disability vs No Disability) 1  |          1        5.20     0.0227
-(Disability vs No Disability) 2  |          1        5.84     0.0157
-(Disability vs No Disability) 3  |          1       10.17     0.0014
-(Disability vs No Disability) 4  |          1        5.32     0.0211
-(Disability vs No Disability) 5  |          1        6.65     0.0100
-                          Joint  |          4        2.75     0.0266
-                          Design |       5985
+(Disability vs No Disability) 1  |          1        4.90     0.0269
+(Disability vs No Disability) 2  |          1        5.49     0.0192
+(Disability vs No Disability) 3  |          1        9.49     0.0021
+(Disability vs No Disability) 4  |          1        5.01     0.0253
+(Disability vs No Disability) 5  |          1        6.22     0.0127
+                          Joint  |          4        2.59     0.0350
+                          Design |       5990
 --------------------------------------------------------------------
 Note: F statistics are adjusted for the survey design.
 
@@ -880,23 +987,23 @@ disability@_predict |
        (Disability  |
                 vs  |
     No Disability)  |
-                 1  |   .0276733   .0121393       .003876    .0514706
+                 1  |   .0267655   .0120934      .0030581     .050473
        (Disability  |
                 vs  |
     No Disability)  |
-                 2  |   .0313912   .0129885      .0059292    .0568533
+                 2  |   .0304369   .0129957      .0049607     .055913
        (Disability  |
                 vs  |
     No Disability)  |
-                 3  |   .0071867   .0022534      .0027692    .0116041
+                 3  |   .0070771   .0022967      .0025747    .0115794
        (Disability  |
                 vs  |
     No Disability)  |
-                 4  |  -.0273502   .0118548     -.0505899   -.0041105
+                 4  |   -.026443   .0118168     -.0496081   -.0032779
        (Disability  |
                 vs  |
     No Disability)  |
-                 5  |   -.038901   .0150886     -.0684801   -.0093219
+                 5  |  -.0378365     .01517     -.0675751   -.0080978
 ---------------------------------------------------------------------
 
 . marginsplot
@@ -908,9 +1015,9 @@ Variables that uniquely identify margins:
 
 Conditional marginal effects
 
-Number of strata =     1                          Number of obs   =      5,986
-Number of PSUs   = 5,986                          Population size = 5,816.7226
-Model VCE: Linearized                             Design df       =      5,985
+Number of strata =     1                          Number of obs   =      5,991
+Number of PSUs   = 5,991                          Population size = 5,819.9416
+Model VCE: Linearized                             Design df       =      5,990
 
 dy/dx wrt: 1.disability
 
@@ -920,38 +1027,38 @@ dy/dx wrt: 1.disability
 4._predict: Pr(preparedness_stage==3), predict(pr outcome(3))
 5._predict: Pr(preparedness_stage==4), predict(pr outcome(4))
 
-At: 0.disability            = .8527153 (mean)
-    1.disability            = .1472847 (mean)
-    male                    = .5084904 (mean)
-    mean_cbo                = .9362677 (mean)
-    new_disaster_experience = .5541679 (mean)
-    1.insurance_ownership   = .1509992 (mean)
-    2.insurance_ownership   = .1688984 (mean)
-    3.insurance_ownership   = .6008282 (mean)
-    4.insurance_ownership   = .0792742 (mean)
-    income_redi             = 84627.17 (mean)
-    0.education             = .0979013 (mean)
-    1.education             = .2674311 (mean)
-    2.education             =  .225719 (mean)
-    3.education             =  .084063 (mean)
-    4.education             = .2031536 (mean)
-    5.education             = .1217321 (mean)
-    0.race_ethnicity        = .6658183 (mean)
-    1.race_ethnicity        = .0977118 (mean)
-    2.race_ethnicity        = .0463707 (mean)
-    3.race_ethnicity        = .1187924 (mean)
-    4.race_ethnicity        = .0507022 (mean)
-    5.race_ethnicity        = .0206046 (mean)
-    0.age                   = .1774371 (mean)
-    1.age                   = .1757914 (mean)
-    2.age                   = .1726473 (mean)
-    3.age                   = .1835007 (mean)
-    4.age                   =  .159228 (mean)
-    5.age                   = .0889125 (mean)
-    6.age                   =  .042483 (mean)
-    0.simple_employment     = .2523757 (mean)
-    1.simple_employment     = .2298339 (mean)
-    2.simple_employment     = .5177904 (mean)
+At: 0.disability            = .8523939 (mean)
+    1.disability            = .1476061 (mean)
+    woman_nb                = .4917908 (mean)
+    new_disaster_experience = .5542756 (mean)
+    1.insurance_ownership   = .1510244 (mean)
+    2.insurance_ownership   = .1688784 (mean)
+    3.insurance_ownership   = .6008669 (mean)
+    4.insurance_ownership   = .0792304 (mean)
+    mean_cbo                = .9361016 (mean)
+    0.race_ethnicity        = .6655889 (mean)
+    1.race_ethnicity        = .0976993 (mean)
+    2.race_ethnicity        = .0463451 (mean)
+    3.race_ethnicity        = .1187267 (mean)
+    4.race_ethnicity        = .0510468 (mean)
+    5.race_ethnicity        = .0205932 (mean)
+    0.age                   = .1773406 (mean)
+    1.age                   = .1757357 (mean)
+    2.age                   = .1725518 (mean)
+    3.age                   = .1833992 (mean)
+    4.age                   =  .159511 (mean)
+    5.age                   = .0890022 (mean)
+    6.age                   = .0424595 (mean)
+    0.education             = .0978471 (mean)
+    1.education             = .2676541 (mean)
+    2.education             = .2255958 (mean)
+    3.education             = .0841251 (mean)
+    4.education             = .2030715 (mean)
+    5.education             = .1217063 (mean)
+    income_redi             = 84596.13 (mean)
+    0.simple_employment     = .2526088 (mean)
+    1.simple_employment     = .2298456 (mean)
+    2.simple_employment     = .5175456 (mean)
 
 -------------------------------------------------------------------------------
               |            Delta-method
@@ -961,11 +1068,11 @@ At: 0.disability            = .8527153 (mean)
 --------------+----------------------------------------------------------------
 1.disability  |
      _predict |
-           1  |   .0276733   .0121393     2.28   0.023      .003876    .0514706
-           2  |   .0313912   .0129885     2.42   0.016     .0059292    .0568533
-           3  |   .0071867   .0022534     3.19   0.001     .0027692    .0116041
-           4  |  -.0273502   .0118548    -2.31   0.021    -.0505899   -.0041105
-           5  |   -.038901   .0150886    -2.58   0.010    -.0684801   -.0093219
+           1  |   .0267655   .0120934     2.21   0.027     .0030581     .050473
+           2  |   .0304369   .0129957     2.34   0.019     .0049607     .055913
+           3  |   .0070771   .0022967     3.08   0.002     .0025747    .0115794
+           4  |   -.026443   .0118168    -2.24   0.025    -.0496081   -.0032779
+           5  |  -.0378365     .01517    -2.49   0.013    -.0675751   -.0080978
 -------------------------------------------------------------------------------
 Note: dy/dx for factor levels is the discrete change from the base level.
 
@@ -985,9 +1092,8 @@ Variables that uniquely identify margins:
 
 . graph export $results/disd04_prep_marginaleffects_plot.jpg, replace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd04_prep_marginaleffects_plot.jpg saved as JPG
-    format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd04_prep_marginaleffects_plot.jpg saved as JPG format
 
 . 
 .         
@@ -996,217 +1102,365 @@ file
 . ***--------------------------***        
 .         
 . *Base model: Disability only
-. quietly: svy: ologit preparedness_stage disability, ///
->           or
-
-. estimates store prep_model_dis
-
-. 
-. *Adding confidence
-. quietly: svy: ologit preparedness_stage disability i.confidence_prep, ///
->         or
-
-. estimates store prepconf_model
-
-. 
-. *Adding info
-. quietly: svy: ologit preparedness_stage disability i.confidence_prep c.mean_in
-> fo, ///
->         or
-
-. estimates store prepconf_model_info
-
-. 
-. *Adding controls
-. svy: ologit preparedness_stage disability i.confidence_prep c.mean_info male  
-> ///  
->          mean_cbo new_disaster_experience i.insurance_ownership  /// 
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t, ///
+. svy: ologit preparedness_stage disability, ///
 >           or
 (running ologit on estimation sample)
 
 Survey: Ordered logistic regression
 
-Number of strata =     1                          Number of obs   =      5,944
-Number of PSUs   = 5,944                          Population size = 5,775.8876
-                                                  Design df       =      5,943
-                                                  F(31, 5913)     =      20.64
+Number of strata =     1                           Number of obs   =     6,810
+Number of PSUs   = 6,810                           Population size = 6,718.423
+                                                   Design df       =     6,809
+                                                   F(1, 6809)      =      1.40
+                                                   Prob > F        =    0.2367
+
+-------------------------------------------------------------------------------
+              |             Linearized
+preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+   disability |   .8869656   .0898951    -1.18   0.237      .727145    1.081913
+--------------+----------------------------------------------------------------
+        /cut1 |  -1.874313    .063365                     -1.998528   -1.750097
+        /cut2 |  -.7201324    .045021                     -.8083877   -.6318771
+        /cut3 |   .2174932   .0421345                      .1348964      .30009
+        /cut4 |   1.367524   .0495951                      1.270302    1.464746
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation to odds ratios.
+
+. estimates store prep_model_dis
+
+. 
+. *Adding controls
+. svy: ologit preparedness_stage disability ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment, ///
+>           or  
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata =     1                          Number of obs   =      5,991
+Number of PSUs   = 5,991                          Population size = 5,819.9416
+                                                  Design df       =      5,990
+                                                  F(26, 5965)     =      12.35
                                                   Prob > F        =     0.0000
 
 -------------------------------------------------------------------------------
               |             Linearized
 preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
 --------------+----------------------------------------------------------------
-   disability |   .9201656   .1046802    -0.73   0.465     .7362267     1.15006
-              |
-confidence_~p |
-Slighly co..  |   1.904036   .6429227     1.91   0.057     .9821943    3.691077
-Somewhat c..  |   3.171015   1.042587     3.51   0.000     1.664477     6.04114
-Moderately..  |   5.591059   1.850603     5.20   0.000     2.922097    10.69778
-Extremely ..  |   10.89207   3.710475     7.01   0.000     5.585761    21.23921
-              |
-    mean_info |   5.326216   .8982529     9.92   0.000     3.826807    7.413119
-         male |   .7753136   .0633476    -3.11   0.002     .6605644    .9099963
-     mean_cbo |   1.311973   .0548374     6.50   0.000     1.208758    1.424001
-new_disaste~e |   1.755982    .142175     6.95   0.000     1.498261    2.058034
+   disability |   .7686647   .0858455    -2.36   0.019     .6175248    .9567961
+new_disaste~e |   2.269486   .1785394    10.42   0.000     1.945138    2.647919
               |
 insurance_o~p |
-Renter wit..  |   1.025863   .1333321     0.20   0.844     .7951251    1.323558
-Owner with..  |    1.27952   .1358071     2.32   0.020     1.039162    1.575474
-Owner with..  |   .9954824   .1712281    -0.03   0.979     .7105468     1.39468
+Renter wit..  |    .773607   .0800769    -2.48   0.013     .6315297    .9476479
+Renter wit..  |   .6673174   .0732535    -3.68   0.000     .5381143    .8275425
+Owner with..  |   .6435564   .1054692    -2.69   0.007     .4667231    .8873886
               |
-  income_redi |   1.000001   6.45e-07     0.78   0.433     .9999992    1.000002
-              |
-    education |
-High schoo..  |   1.664036   .3214005     2.64   0.008     1.139525    2.429975
-Some colle..  |   1.475861    .291311     1.97   0.049     1.002301    2.173167
-Associate'..  |   1.525351   .3389306     1.90   0.057     .9867236    2.358001
-Bachelor's..  |   1.392422   .2909487     1.58   0.113     .9244313    2.097331
-Post gradu..  |   2.030016   .4631325     3.10   0.002     1.297971    3.174929
+     mean_cbo |   1.343137    .053046     7.47   0.000     1.243071    1.451258
+     woman_nb |   1.219401   .0996947     2.43   0.015     1.038821    1.431371
               |
 race_ethnic~y |
-Black or A..  |   1.175823     .16074     1.18   0.236     .8994052    1.537193
-       Asian  |   1.560503   .3175227     2.19   0.029     1.047204      2.3254
-Hispanic/L~o  |   1.239568   .1386686     1.92   0.055     .9954707    1.543521
-       Other  |    1.36158   .2218739     1.89   0.058     .9892566    1.874034
-    Multiple  |   .8662012   .2141283    -0.58   0.561      .533526    1.406313
+Black or A..  |   1.156804   .1467807     1.15   0.251     .9020562    1.483495
+       Asian  |   1.190634   .2270298     0.92   0.360     .8192921    1.730287
+Hispanic/L~o  |   1.106806   .1228875     0.91   0.361     .8903165    1.375937
+       Other  |   1.304563   .2094581     1.66   0.098     .9522919    1.787145
+    Multiple  |   .8568789   .1946841    -0.68   0.497     .5488912    1.337681
               |
           age |
-       30-39  |   .9417627    .117355    -0.48   0.630     .7376492    1.202356
-       40-49  |   1.029039   .1342744     0.22   0.826     .7967825    1.328996
-       50-59  |   1.226779   .1644358     1.52   0.127     .9432984    1.595451
-       60-69  |   1.062611   .1664888     0.39   0.698     .7815952    1.444664
-       70-79  |   1.248054   .2744946     1.01   0.314     .8109308    1.920805
-     Over 80  |    1.00578   .3029626     0.02   0.985     .5572504     1.81533
+       30-39  |   .9799948   .1172424    -0.17   0.866     .7751203     1.23902
+       40-49  |   1.112636   .1413965     0.84   0.401     .8672779    1.427406
+       50-59  |   1.221912   .1552859     1.58   0.115     .9524528    1.567603
+       60-69  |   1.124354   .1757307     0.75   0.453     .8276326    1.527455
+       70-79  |   1.150261   .2650628     0.61   0.544     .7321635    1.807109
+     Over 80  |   .7808828   .2460992    -0.78   0.433     .4209894     1.44844
+              |
+    education |
+High schoo..  |   1.633419   .3116624     2.57   0.010     1.123705     2.37434
+Some colle..  |    1.65944   .3237274     2.60   0.009      1.13207    2.432481
+Associate'..  |   1.672808   .3650576     2.36   0.018     1.090562    2.565912
+Bachelor's..  |    1.45219   .2976159     1.82   0.069     .9717184    2.170232
+Post gradu..  |   2.140567   .4823912     3.38   0.001     1.376151    3.329596
+              |
+  income_redi |   1.000001   6.41e-07     0.78   0.433     .9999992    1.000002
               |
 simple_empl~t |
-  Unemployed  |   .8572612   .0847042    -1.56   0.119     .7063023    1.040485
-     Retired  |   1.388408   .2054545     2.22   0.027       1.0388    1.855677
+  Unemployed  |   .7859098   .0763214    -2.48   0.013     .6496718    .9507174
+     Retired  |   1.354263   .2185302     1.88   0.060     .9870099    1.858167
     Employed  |          1  (omitted)
            3  |          1  (empty)
 --------------+----------------------------------------------------------------
-        /cut1 |   1.027472   .3834781                      .2757151    1.779228
-        /cut2 |   2.467396   .3864063                      1.709899    3.224893
-        /cut3 |    3.65543   .3904303                      2.890045    4.420815
-        /cut4 |   5.072419   .3959342                      4.296244    5.848594
+        /cut1 |  -.8626268   .2359423                     -1.325159   -.4000951
+        /cut2 |   .4263803   .2307428                     -.0259587    .8787194
+        /cut3 |   1.474875   .2292048                      1.025551    1.924199
+        /cut4 |   2.737272   .2308991                      2.284627    3.189918
 -------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation to odds ratios.
 
 . estimates store prepconf_model_controls
 
 . 
+. *Adding info
+. svy: ologit preparedness_stage disability c.mean_info   ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment, ///
+>           or  
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata =     1                          Number of obs   =      5,991
+Number of PSUs   = 5,991                          Population size = 5,819.9416
+                                                  Design df       =      5,990
+                                                  F(27, 5964)     =      15.80
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+   disability |   .8374818   .0977388    -1.52   0.129     .6662163    1.052775
+    mean_info |   8.374662   1.411959    12.61   0.000     6.017646    11.65488
+new_disaste~e |   1.954331    .155529     8.42   0.000     1.672031    2.284294
+              |
+insurance_o~p |
+Renter wit..  |   .7868943   .0837664    -2.25   0.024      .638684    .9694977
+Renter wit..  |   .7407054   .0840917    -2.64   0.008     .5929114    .9253398
+Owner with..  |   .7462348   .1246823    -1.75   0.080     .5378069    1.035439
+              |
+     mean_cbo |   1.404154   .0584519     8.15   0.000     1.294118    1.523546
+     woman_nb |   1.203457   .0987969     2.26   0.024     1.024561     1.41359
+              |
+race_ethnic~y |
+Black or A..  |   1.273384   .1628031     1.89   0.059     .9910842    1.636093
+       Asian  |   1.318188   .2704717     1.35   0.178     .8816351    1.970906
+Hispanic/L~o  |   1.223072   .1405062     1.75   0.080      .976442    1.531996
+       Other  |   1.414816   .2443904     2.01   0.045     1.008409    1.985013
+    Multiple  |    .882208   .2283348    -0.48   0.628     .5311495    1.465295
+              |
+          age |
+       30-39  |   1.009199   .1246915     0.07   0.941     .7921097    1.285784
+       40-49  |    1.20311   .1583108     1.41   0.160     .9295607    1.557159
+       50-59  |   1.420575   .1910929     2.61   0.009     1.091288    1.849223
+       60-69  |   1.264473   .2014489     1.47   0.141     .9252804    1.728008
+       70-79  |    1.40107    .318137     1.49   0.138     .8977195    2.186647
+     Over 80  |    .955834   .3061609    -0.14   0.888     .5101302    1.790952
+              |
+    education |
+High schoo..  |   1.588159   .3194883     2.30   0.022     1.070592    2.355939
+Some colle..  |   1.484076   .3046777     1.92   0.055      .992364     2.21943
+Associate'..  |   1.546115   .3536776     1.90   0.057     .9873885    2.421005
+Bachelor's..  |   1.361602   .2955087     1.42   0.155     .8897676    2.083646
+Post gradu..  |   2.042227   .4839132     3.01   0.003     1.283418    3.249677
+              |
+  income_redi |          1   6.32e-07     0.75   0.456     .9999992    1.000002
+              |
+simple_empl~t |
+  Unemployed  |   .8159333   .0800241    -2.07   0.038     .6732165    .9889051
+     Retired  |   1.400716    .217505     2.17   0.030     1.033112     1.89912
+    Employed  |          1  (omitted)
+           3  |          1  (empty)
+--------------+----------------------------------------------------------------
+        /cut1 |  -.0431036   .2544026                     -.5418244    .4556171
+        /cut2 |   1.321109   .2522451                       .826618      1.8156
+        /cut3 |   2.423956   .2529856                      1.928013    2.919899
+        /cut4 |   3.747892   .2575159                      3.243068    4.252716
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation to odds ratios.
+
+. estimates store prepconf_model_info
+
+. 
+. *Adding confidence
+. svy: ologit preparedness_stage disability c.mean_info i.confidence_prep  ///  
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment, ///
+>           or
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata =     1                          Number of obs   =      5,949
+Number of PSUs   = 5,949                          Population size = 5,779.1066
+                                                  Design df       =      5,948
+                                                  F(31, 5918)     =      20.65
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+preparednes~e | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+   disability |   .9279747   .1056318    -0.66   0.511     .7423757    1.159975
+    mean_info |   5.285878   .8909872     9.88   0.000     3.798476    7.355713
+              |
+confidence_~p |
+Slightly c..  |    1.90883     .64475     1.91   0.056     .9844558    3.701162
+Somewhat c..  |    3.18159    1.04651     3.52   0.000     1.669569    6.062952
+Moderately..  |   5.613276   1.858719     5.21   0.000     2.932928    10.74314
+Extremely ..  |   10.98169   3.742475     7.03   0.000     5.630246    21.41959
+              |
+new_disaste~e |   1.757825   .1422585     6.97   0.000     1.499943    2.060042
+              |
+insurance_o~p |
+Renter wit..  |   .7789971   .0826022    -2.36   0.019     .6327891     .958987
+Renter wit..  |   .7984678   .0920714    -1.95   0.051     .6369206    1.000989
+Owner with..  |   .7767416    .123325    -1.59   0.112     .5689864    1.060355
+              |
+     mean_cbo |   1.310706   .0547493     6.48   0.000     1.207655    1.422552
+     woman_nb |    1.29238   .1055816     3.14   0.002     1.101125    1.516853
+              |
+race_ethnic~y |
+Black or A..  |   1.175168   .1606789     1.18   0.238     .8988612    1.536409
+       Asian  |   1.562724   .3177521     2.20   0.028     1.048988     2.32806
+Hispanic/L~o  |   1.240858   .1387844     1.93   0.054     .9965515    1.545057
+       Other  |   1.386446   .2263711     2.00   0.045     1.006689     1.90946
+    Multiple  |   .8663499   .2141774    -0.58   0.562     .5336028    1.406594
+              |
+          age |
+       30-39  |   .9419451   .1173553    -0.48   0.631     .7378266    1.202533
+       40-49  |   1.029507   .1342977     0.22   0.824     .7972025    1.329505
+       50-59  |   1.227036   .1644649     1.53   0.127     .9435042    1.595771
+       60-69  |   1.073272   .1681614     0.45   0.652     .7894335    1.459164
+       70-79  |   1.255839   .2759502     1.04   0.300     .8163159    1.932012
+     Over 80  |   1.011399   .3045335     0.04   0.970     .5604957     1.82504
+              |
+    education |
+High schoo..  |   1.676879   .3238116     2.68   0.007     1.148413     2.44853
+Some colle..  |   1.481473   .2923788     1.99   0.046     1.006165    2.181315
+Associate'..  |   1.529956   .3396247     1.92   0.055       .99012    2.364122
+Bachelor's..  |    1.40033   .2925401     1.61   0.107     .9297609    2.109062
+Post gradu..  |   2.038477   .4648787     3.12   0.002     1.303612    3.187598
+              |
+  income_redi |          1   6.45e-07     0.77   0.442     .9999992    1.000002
+              |
+simple_empl~t |
+  Unemployed  |   .8596638   .0849456    -1.53   0.126     .7082754     1.04341
+     Retired  |   1.378367   .2039201     2.17   0.030     1.031359    1.842129
+    Employed  |          1  (omitted)
+           3  |          1  (empty)
+--------------+----------------------------------------------------------------
+        /cut1 |   1.044019   .3872028                      .2849614    1.803077
+        /cut2 |   2.483545   .3896967                      1.719598    3.247492
+        /cut3 |   3.671544   .3927421                      2.901627    4.441461
+        /cut4 |   5.087401   .3970477                      4.309044    5.865759
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation to odds ratios.
+
+. estimates store prepconf_model
+
+. 
 . * Put in table
 . etable, showstars ///
->         estimates(prep_model_dis prepconf_model prepconf_model_info prepconf_m
-> odel_controls) ///
+>         estimates(prep_model_dis  prepconf_model_controls prepconf_model_info 
+>  prepconf_model) ///
 >         mstat(N) mstat(r2_a) ///
 > export("$results/disd04_prepconf_nested_model.docx", as(docx) replace)
 
------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                                                                preparedness_stage preparedness_stage preparedness_stage preparedness_stage
------------------------------------------------------------------------------------------------------------------------------------------------------------
-disability                                                                                   0.887       0.983              1.070              0.920       
-                                                                                           (0.090)     (0.094)            (0.108)            (0.105)       
-confidence_prep                                                                                                                                            
-  Slighly confident                                                                                      2.672 **           2.427 **           1.904       
-                                                                                                       (0.710)            (0.626)            (0.643)       
-  Somewhat confident                                                                                     4.379 **           3.811 **           3.171 **    
-                                                                                                       (1.105)            (0.933)            (1.043)       
-  Moderately confident                                                                                   8.889 **           6.875 **           5.591 **    
-                                                                                                       (2.272)            (1.713)            (1.851)       
-  Extremely confident                                                                                   20.562 **          14.805 **          10.892 **    
-                                                                                                       (5.425)            (3.832)            (3.710)       
-Mean info: alerts + plan + saving + drills + comm + docs + neighbors + supplies                                             5.838 **           5.326 **    
-                                                                                                                          (0.894)            (0.898)       
-male                                                                                                                                           0.775 **    
-                                                                                                                                             (0.063)       
-mean_cbo                                                                                                                                       1.312 **    
-                                                                                                                                             (0.055)       
-new_disaster_experience                                                                                                                        1.756 **    
-                                                                                                                                             (0.142)       
-insurance_ownership                                                                                                                                        
-  Renter without insurance                                                                                                                     1.026       
-                                                                                                                                             (0.133)       
-  Owner with insurance                                                                                                                         1.280 *     
-                                                                                                                                             (0.136)       
-  Owner without insurance                                                                                                                      0.995       
-                                                                                                                                             (0.171)       
-REDI continuous income income                                                                                                                  1.000       
-                                                                                                                                             (0.000)       
-education                                                                                                                                                  
-  High school degree or diploma                                                                                                                1.664 **    
-                                                                                                                                             (0.321)       
-  Some college, no degree                                                                                                                      1.476 *     
-                                                                                                                                             (0.291)       
-  Associate's degree                                                                                                                           1.525       
-                                                                                                                                             (0.339)       
-  Bachelor's degree                                                                                                                            1.392       
-                                                                                                                                             (0.291)       
-  Post graduate work/degree or professional degree                                                                                             2.030 **    
-                                                                                                                                             (0.463)       
-race_ethnicity                                                                                                                                             
-  Black or African American                                                                                                                    1.176       
-                                                                                                                                             (0.161)       
-  Asian                                                                                                                                        1.561 *     
-                                                                                                                                             (0.318)       
-  Hispanic/Latino                                                                                                                              1.240       
-                                                                                                                                             (0.139)       
-  Other                                                                                                                                        1.362       
-                                                                                                                                             (0.222)       
-  Multiple                                                                                                                                     0.866       
-                                                                                                                                             (0.214)       
-age                                                                                                                                                        
-  30-39                                                                                                                                        0.942       
-                                                                                                                                             (0.117)       
-  40-49                                                                                                                                        1.029       
-                                                                                                                                             (0.134)       
-  50-59                                                                                                                                        1.227       
-                                                                                                                                             (0.164)       
-  60-69                                                                                                                                        1.063       
-                                                                                                                                             (0.166)       
-  70-79                                                                                                                                        1.248       
-                                                                                                                                             (0.274)       
-  Over 80                                                                                                                                      1.006       
-                                                                                                                                             (0.303)       
-simple_employment                                                                                                                                          
-  Unemployed                                                                                                                                   0.857       
-                                                                                                                                             (0.085)       
-  Retired                                                                                                                                      1.388 *     
-                                                                                                                                             (0.205)       
-cut1                                                                                        -1.874      -0.167              0.266              1.027       
-                                                                                           (0.063)     (0.246)            (0.240)            (0.383)       
-cut2                                                                                        -0.720       1.123              1.606              2.467       
-                                                                                           (0.045)     (0.248)            (0.242)            (0.386)       
-cut3                                                                                         0.217       2.198              2.717              3.655       
-                                                                                           (0.042)     (0.251)            (0.246)            (0.390)       
-cut4                                                                                         1.368       3.494              4.056              5.072       
-                                                                                           (0.050)     (0.256)            (0.252)            (0.396)       
-Number of observations                                                                        6810        6728               6728               5944       
------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+                                                   preparedness_stage preparedness_stage preparedness_stage preparedness_stage
+------------------------------------------------------------------------------------------------------------------------------
+Disability                                                      0.887       0.769 *            0.837              0.928       
+                                                              (0.090)     (0.086)            (0.098)            (0.106)       
+Disaster Experience                                                         2.269 **           1.954 **           1.758 **    
+                                                                          (0.179)            (0.156)            (0.142)       
+Rent / Own Home & Insurance                                                                                                   
+  Renter with insurance                                                     0.774 *            0.787 *            0.779 *     
+                                                                          (0.080)            (0.084)            (0.083)       
+  Renter without insurance                                                  0.667 **           0.741 **           0.798       
+                                                                          (0.073)            (0.084)            (0.092)       
+  Owner without insurance                                                   0.644 **           0.746              0.777       
+                                                                          (0.105)            (0.125)            (0.123)       
+Mean Community Involvement                                                  1.343 **           1.404 **           1.311 **    
+                                                                          (0.053)            (0.058)            (0.055)       
+Woman/non-binary/other                                                      1.219 *            1.203 *            1.292 **    
+                                                                          (0.100)            (0.099)            (0.106)       
+Race / Ethnicity                                                                                                              
+  Black or African American                                                 1.157              1.273              1.175       
+                                                                          (0.147)            (0.163)            (0.161)       
+  Asian                                                                     1.191              1.318              1.563 *     
+                                                                          (0.227)            (0.270)            (0.318)       
+  Hispanic/Latino                                                           1.107              1.223              1.241       
+                                                                          (0.123)            (0.141)            (0.139)       
+  Other                                                                     1.305              1.415 *            1.386 *     
+                                                                          (0.209)            (0.244)            (0.226)       
+  Multiple                                                                  0.857              0.882              0.866       
+                                                                          (0.195)            (0.228)            (0.214)       
+Age                                                                                                                           
+  30-39                                                                     0.980              1.009              0.942       
+                                                                          (0.117)            (0.125)            (0.117)       
+  40-49                                                                     1.113              1.203              1.030       
+                                                                          (0.141)            (0.158)            (0.134)       
+  50-59                                                                     1.222              1.421 **           1.227       
+                                                                          (0.155)            (0.191)            (0.164)       
+  60-69                                                                     1.124              1.264              1.073       
+                                                                          (0.176)            (0.201)            (0.168)       
+  70-79                                                                     1.150              1.401              1.256       
+                                                                          (0.265)            (0.318)            (0.276)       
+  Over 80                                                                   0.781              0.956              1.011       
+                                                                          (0.246)            (0.306)            (0.305)       
+Education level                                                                                                               
+  High school degree or diploma                                             1.633 *            1.588 *            1.677 **    
+                                                                          (0.312)            (0.319)            (0.324)       
+  Some college, no degree                                                   1.659 **           1.484              1.481 *     
+                                                                          (0.324)            (0.305)            (0.292)       
+  Associate's degree                                                        1.673 *            1.546              1.530       
+                                                                          (0.365)            (0.354)            (0.340)       
+  Bachelor's degree                                                         1.452              1.362              1.400       
+                                                                          (0.298)            (0.296)            (0.293)       
+  Post graduate work/degree or professional degree                          2.141 **           2.042 **           2.038 **    
+                                                                          (0.482)            (0.484)            (0.465)       
+REDI continuous income income                                               1.000              1.000              1.000       
+                                                                          (0.000)            (0.000)            (0.000)       
+Employment Status                                                                                                             
+  Unemployed                                                                0.786 *            0.816 *            0.860       
+                                                                          (0.076)            (0.080)            (0.085)       
+  Retired                                                                   1.354              1.401 *            1.378 *     
+                                                                          (0.219)            (0.218)            (0.204)       
+Mean information                                                                               8.375 **           5.286 **    
+                                                                                             (1.412)            (0.891)       
+Confidence level                                                                                                              
+  Slightly confident                                                                                              1.909       
+                                                                                                                (0.645)       
+  Somewhat confident                                                                                              3.182 **    
+                                                                                                                (1.047)       
+  Moderately confident                                                                                            5.613 **    
+                                                                                                                (1.859)       
+  Extremely confident                                                                                            10.982 **    
+                                                                                                                (3.742)       
+cut1                                                           -1.874      -0.863             -0.043              1.044       
+                                                              (0.063)     (0.236)            (0.254)            (0.387)       
+cut2                                                           -0.720       0.426              1.321              2.484       
+                                                              (0.045)     (0.231)            (0.252)            (0.390)       
+cut3                                                            0.217       1.475              2.424              3.672       
+                                                              (0.042)     (0.229)            (0.253)            (0.393)       
+cut4                                                            1.368       2.737              3.748              5.087       
+                                                              (0.050)     (0.231)            (0.258)            (0.397)       
+Number of observations                                           6810        5991               5991               5949       
+------------------------------------------------------------------------------------------------------------------------------
 (collection ETable exported to file
- /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster_re
- > sponse/results/disd04_prepconf_nested_model.docx)
+ ~/Documents/SocResearch/climate_disability/disability_disaster_response/resul
+ > ts/disd04_prepconf_nested_model.docx)
 
-. 
 . 
 . // VISUALIZE: Conditional marginal effects of disability on preparedness level
 > , controlling for information and confidence
 . quietly: ///
-> svy: ologit preparedness_stage i.disability mean_info confidence_prep male  //
-> /  
->          mean_cbo new_disaster_experience i.insurance_ownership  /// 
->          c.income_redi i.education i.race_ethnicity i.age ib3.simple_employmen
-> t
+> svy: ologit preparedness_stage i.disability c.mean_info i.confidence_prep  ///
+>   
+>         new_disaster_experience ib3.insurance_ownership mean_cbo  ///
+>         woman_nb i.race_ethnicity  i.age  i.education  c.income_redi  ib3.simp
+> le_employment
 
-. 
 . margins r.disability, atmeans
 
 Contrasts of adjusted predictions
 
-Number of strata =     1                          Number of obs   =      5,944
-Number of PSUs   = 5,944                          Population size = 5,775.8876
-Model VCE: Linearized                             Design df       =      5,943
+Number of strata =     1                          Number of obs   =      5,949
+Number of PSUs   = 5,949                          Population size = 5,779.1066
+Model VCE: Linearized                             Design df       =      5,948
 
 1._predict: Pr(preparedness_stage==0), predict(pr outcome(0))
 2._predict: Pr(preparedness_stage==1), predict(pr outcome(1))
@@ -1214,52 +1468,54 @@ Model VCE: Linearized                             Design df       =      5,943
 4._predict: Pr(preparedness_stage==3), predict(pr outcome(3))
 5._predict: Pr(preparedness_stage==4), predict(pr outcome(4))
 
-At: 0.disability            =  .853087 (mean)
-    1.disability            =  .146913 (mean)
-    mean_info               = .4025404 (mean)
-    confidence_prep         = 2.657978 (mean)
-    male                    = .5091945 (mean)
-    mean_cbo                = .9397718 (mean)
-    new_disaster_experience = .5562598 (mean)
-    1.insurance_ownership   = .1512942 (mean)
-    2.insurance_ownership   = .1683482 (mean)
-    3.insurance_ownership   = .6009571 (mean)
-    4.insurance_ownership   = .0794005 (mean)
-    income_redi             = 84785.14 (mean)
-    0.education             = .0976297 (mean)
-    1.education             = .2657496 (mean)
-    2.education             = .2258161 (mean)
-    3.education             = .0843542 (mean)
-    4.education             = .2041246 (mean)
-    5.education             = .1223258 (mean)
-    0.race_ethnicity        = .6655955 (mean)
-    1.race_ethnicity        = .0975579 (mean)
-    2.race_ethnicity        = .0465706 (mean)
-    3.race_ethnicity        = .1186763 (mean)
-    4.race_ethnicity        = .0510606 (mean)
-    5.race_ethnicity        =  .020539 (mean)
-    0.age                   = .1769106 (mean)
-    1.age                   = .1767269 (mean)
-    2.age                   = .1733887 (mean)
-    3.age                   = .1835361 (mean)
-    4.age                   = .1591739 (mean)
-    5.age                   = .0892118 (mean)
-    6.age                   =  .041052 (mean)
-    0.simple_employment     = .2511399 (mean)
-    1.simple_employment     = .2296382 (mean)
-    2.simple_employment     = .5192219 (mean)
+At: mean_info               =  .402364 (mean)
+    0.confidence_prep       = .0229119 (mean)
+    1.confidence_prep       = .1198542 (mean)
+    2.confidence_prep       = .2799392 (mean)
+    3.confidence_prep       = .3304888 (mean)
+    4.confidence_prep       =  .246806 (mean)
+    new_disaster_experience = .5563671 (mean)
+    1.insurance_ownership   = .1513194 (mean)
+    2.insurance_ownership   = .1683284 (mean)
+    3.insurance_ownership   =  .600996 (mean)
+    4.insurance_ownership   = .0793562 (mean)
+    mean_cbo                = .9396026 (mean)
+    woman_nb                = .4910891 (mean)
+    0.race_ethnicity        = .6653647 (mean)
+    1.race_ethnicity        = .0975454 (mean)
+    2.race_ethnicity        = .0465447 (mean)
+    3.race_ethnicity        = .1186102 (mean)
+    4.race_ethnicity        = .0514075 (mean)
+    5.race_ethnicity        = .0205276 (mean)
+    0.age                   = .1768138 (mean)
+    1.age                   = .1766703 (mean)
+    2.age                   = .1732921 (mean)
+    3.age                   = .1834339 (mean)
+    4.age                   = .1594588 (mean)
+    5.age                   =  .089302 (mean)
+    6.age                   = .0410291 (mean)
+    0.education             = .0975753 (mean)
+    1.education             = .2659752 (mean)
+    2.education             = .2256921 (mean)
+    3.education             = .0844167 (mean)
+    4.education             = .2040413 (mean)
+    5.education             = .1222995 (mean)
+    income_redi             = 84753.79 (mean)
+    0.simple_employment     = .2513753 (mean)
+    1.simple_employment     = .2296502 (mean)
+    2.simple_employment     = .5189745 (mean)
 
 --------------------------------------------------------------------
                                  |         df           F        P>F
 ---------------------------------+----------------------------------
              disability@_predict |
-(Disability vs No Disability) 1  |          1        0.51     0.4747
-(Disability vs No Disability) 2  |          1        0.52     0.4688
-(Disability vs No Disability) 3  |          1        0.62     0.4329
-(Disability vs No Disability) 4  |          1        0.52     0.4727
-(Disability vs No Disability) 5  |          1        0.55     0.4569
-                          Joint  |          4        0.25     0.9084
-                          Design |       5943
+(Disability vs No Disability) 1  |          1        0.42     0.5191
+(Disability vs No Disability) 2  |          1        0.43     0.5141
+(Disability vs No Disability) 3  |          1        0.49     0.4841
+(Disability vs No Disability) 4  |          1        0.42     0.5175
+(Disability vs No Disability) 5  |          1        0.45     0.5040
+                          Joint  |          4        0.20     0.9368
+                          Design |       5948
 --------------------------------------------------------------------
 Note: F statistics are adjusted for the survey design.
 
@@ -1271,23 +1527,23 @@ disability@_predict |
        (Disability  |
                 vs  |
     No Disability)  |
-                 1  |   .0064224   .0089835     -.0111885    .0240334
+                 1  |   .0057701   .0089493     -.0117739     .023314
        (Disability  |
                 vs  |
     No Disability)  |
-                 2  |   .0103521   .0142878     -.0176572    .0383614
+                 2  |   .0092889    .014235     -.0186169    .0371947
        (Disability  |
                 vs  |
     No Disability)  |
-                 3  |   .0036704   .0046803     -.0055046    .0128454
+                 3  |   .0033557   .0047953     -.0060448    .0127562
        (Disability  |
                 vs  |
     No Disability)  |
-                 4  |  -.0093113   .0129671     -.0347316     .016109
+                 4  |  -.0083653   .0129255     -.0337039    .0169733
        (Disability  |
                 vs  |
     No Disability)  |
-                 5  |  -.0111336   .0149632     -.0404669    .0181997
+                 5  |  -.0100493   .0150374     -.0395281    .0194294
 ---------------------------------------------------------------------
 
 . marginsplot
@@ -1299,9 +1555,9 @@ Variables that uniquely identify margins:
 
 Conditional marginal effects
 
-Number of strata =     1                          Number of obs   =      5,944
-Number of PSUs   = 5,944                          Population size = 5,775.8876
-Model VCE: Linearized                             Design df       =      5,943
+Number of strata =     1                          Number of obs   =      5,949
+Number of PSUs   = 5,949                          Population size = 5,779.1066
+Model VCE: Linearized                             Design df       =      5,948
 
 dy/dx wrt: 1.disability
 
@@ -1311,40 +1567,44 @@ dy/dx wrt: 1.disability
 4._predict: Pr(preparedness_stage==3), predict(pr outcome(3))
 5._predict: Pr(preparedness_stage==4), predict(pr outcome(4))
 
-At: 0.disability            =  .853087 (mean)
-    1.disability            =  .146913 (mean)
-    mean_info               = .4025404 (mean)
-    confidence_prep         = 2.657978 (mean)
-    male                    = .5091945 (mean)
-    mean_cbo                = .9397718 (mean)
-    new_disaster_experience = .5562598 (mean)
-    1.insurance_ownership   = .1512942 (mean)
-    2.insurance_ownership   = .1683482 (mean)
-    3.insurance_ownership   = .6009571 (mean)
-    4.insurance_ownership   = .0794005 (mean)
-    income_redi             = 84785.14 (mean)
-    0.education             = .0976297 (mean)
-    1.education             = .2657496 (mean)
-    2.education             = .2258161 (mean)
-    3.education             = .0843542 (mean)
-    4.education             = .2041246 (mean)
-    5.education             = .1223258 (mean)
-    0.race_ethnicity        = .6655955 (mean)
-    1.race_ethnicity        = .0975579 (mean)
-    2.race_ethnicity        = .0465706 (mean)
-    3.race_ethnicity        = .1186763 (mean)
-    4.race_ethnicity        = .0510606 (mean)
-    5.race_ethnicity        =  .020539 (mean)
-    0.age                   = .1769106 (mean)
-    1.age                   = .1767269 (mean)
-    2.age                   = .1733887 (mean)
-    3.age                   = .1835361 (mean)
-    4.age                   = .1591739 (mean)
-    5.age                   = .0892118 (mean)
-    6.age                   =  .041052 (mean)
-    0.simple_employment     = .2511399 (mean)
-    1.simple_employment     = .2296382 (mean)
-    2.simple_employment     = .5192219 (mean)
+At: 0.disability            = .8527631 (mean)
+    1.disability            = .1472369 (mean)
+    mean_info               =  .402364 (mean)
+    0.confidence_prep       = .0229119 (mean)
+    1.confidence_prep       = .1198542 (mean)
+    2.confidence_prep       = .2799392 (mean)
+    3.confidence_prep       = .3304888 (mean)
+    4.confidence_prep       =  .246806 (mean)
+    new_disaster_experience = .5563671 (mean)
+    1.insurance_ownership   = .1513194 (mean)
+    2.insurance_ownership   = .1683284 (mean)
+    3.insurance_ownership   =  .600996 (mean)
+    4.insurance_ownership   = .0793562 (mean)
+    mean_cbo                = .9396026 (mean)
+    woman_nb                = .4910891 (mean)
+    0.race_ethnicity        = .6653647 (mean)
+    1.race_ethnicity        = .0975454 (mean)
+    2.race_ethnicity        = .0465447 (mean)
+    3.race_ethnicity        = .1186102 (mean)
+    4.race_ethnicity        = .0514075 (mean)
+    5.race_ethnicity        = .0205276 (mean)
+    0.age                   = .1768138 (mean)
+    1.age                   = .1766703 (mean)
+    2.age                   = .1732921 (mean)
+    3.age                   = .1834339 (mean)
+    4.age                   = .1594588 (mean)
+    5.age                   =  .089302 (mean)
+    6.age                   = .0410291 (mean)
+    0.education             = .0975753 (mean)
+    1.education             = .2659752 (mean)
+    2.education             = .2256921 (mean)
+    3.education             = .0844167 (mean)
+    4.education             = .2040413 (mean)
+    5.education             = .1222995 (mean)
+    income_redi             = 84753.79 (mean)
+    0.simple_employment     = .2513753 (mean)
+    1.simple_employment     = .2296502 (mean)
+    2.simple_employment     = .5189745 (mean)
 
 -------------------------------------------------------------------------------
               |            Delta-method
@@ -1354,11 +1614,11 @@ At: 0.disability            =  .853087 (mean)
 --------------+----------------------------------------------------------------
 1.disability  |
      _predict |
-           1  |   .0064224   .0089835     0.71   0.475    -.0111885    .0240334
-           2  |   .0103521   .0142878     0.72   0.469    -.0176572    .0383614
-           3  |   .0036704   .0046803     0.78   0.433    -.0055046    .0128454
-           4  |  -.0093113   .0129671    -0.72   0.473    -.0347316     .016109
-           5  |  -.0111336   .0149632    -0.74   0.457    -.0404669    .0181997
+           1  |   .0057701   .0089493     0.64   0.519    -.0117739     .023314
+           2  |   .0092889    .014235     0.65   0.514    -.0186169    .0371947
+           3  |   .0033557   .0047953     0.70   0.484    -.0060448    .0127562
+           4  |  -.0083653   .0129255    -0.65   0.518    -.0337039    .0169733
+           5  |  -.0100493   .0150374    -0.67   0.504    -.0395281    .0194294
 -------------------------------------------------------------------------------
 Note: dy/dx for factor levels is the discrete change from the base level.
 
@@ -1379,9 +1639,9 @@ Variables that uniquely identify margins:
 . graph export $results/disd04_prep_infoconfidence_marginaleffects_plot.jpg, rep
 > lace
 file
-    /Users/mmking/Documents/SocResearch/climate_disability/disability_disaster
-    > _response/results/disd04_prep_infoconfidence_marginaleffects_plot.jpg
-    saved as JPG format
+    ~/Documents/SocResearch/climate_disability/disability_disaster_response/re
+    > sults/disd04_prep_infoconfidence_marginaleffects_plot.jpg saved as JPG
+    format
 
 . 
 . 
@@ -1391,5 +1651,5 @@ file
        log:  /Users/mmking/Documents/SocResearch/climate_disability/disability_d
 > isaster_response/stata/disd04_regress.log
   log type:  text
- closed on:  18 Jul 2024, 19:09:43
+ closed on:  26 Sep 2025, 15:23:41
 --------------------------------------------------------------------------------
